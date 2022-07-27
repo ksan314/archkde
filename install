@@ -542,7 +542,7 @@ sleep 2
 # unmount all partitions
 echo -e "\nUnmounting partitions\n"
 sleep 2
-umount -R /mnt
+umount -a
 echo -e "\nDone\n"
 sleep 2
 
