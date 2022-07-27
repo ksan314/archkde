@@ -151,7 +151,7 @@ sleep 2
 # essential packages
 echo -e "\nInstalling essential packages\n"
 sleep 2
-pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils exfat-utils findutils git hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector shellcheck sudo texinfo tldr ufw unzip vim zip zoxide
+pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils exfat-utils findutils git hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector shellcheck snapper sudo texinfo tldr ufw unzip vim zip zoxide
 echo -e "\nDone\n"
 sleep 2
 
