@@ -1,0 +1,298 @@
+#!/bin/bash
+# this script will configure the system and install KDE Plasma
+
+
+
+
+
+
+
+
+
+
+# chroot confirmation
+#####################
+
+echo -e "\nChrooted into new environment\n"
+sleep 2
+echo -e "\nRunning chroot script\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# import user inputs and system information
+###########################################
+
+# import user inputs and system information from /root/confidentials (must be the exact same list of variables saved to /root/confidentials during install script)
+echo -e "\nImporting user inputs and system information\n"
+sleep 2
+read -r userName userPassword rootPassword hostName timeZone diskName customConfig archURL nvme cpuThreads processorVendor graphicsVendor < /root/confidentials
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# configure the system
+######################
+
+# set the time and language
+echo -e "\nSetting time and language\n"
+sleep 2
+ln -sf /usr/share/zoneinfo/"$timeZone" /etc/localtime
+hwclock --systohc
+sed -i 's/#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
+locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo -e "\nDone\n"
+sleep 2
+
+
+# set the hostname
+echo -e "\nSetting hostname\n"
+sleep 2
+echo -e "$hostName" > /etc/hostname
+echo -e "\nDone\n"
+sleep 2
+
+
+# configure the network
+echo -e "\nConfiguring Network\n"
+sleep 2
+echo -e "127.0.0.1   localhost\n::1         localhost\n127.0.1.1   $hostName" >> /etc/hosts
+echo -e "\nDone\n"
+sleep 2
+
+
+# configure root user
+echo -e "\nConfiguring root user\n"
+sleep 2
+echo -e "$rootPassword\n$rootPassword" | passwd root
+echo -e "root ALL=(ALL:ALL) ALL" >> /etc/sudoers
+echo -e "\nDone\n"
+sleep 2
+
+
+# configure user
+echo -e "\nConfiguring user \"$userName\"\n"
+sleep 2
+useradd -m -g users -G wheel -s /bin/bash "$userName"
+echo -e "$userPassword\n$userPassword" | passwd "$userName"
+echo -e "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
+echo -e "\nDone\n"
+sleep 2
+
+
+# enable microcode updates
+echo -e "\nEnabling microcode updates\n"
+sleep 2
+pacman -S --needed --noconfirm "$processorVendor"-ucode
+echo -e "\nDone\n"
+sleep 2 
+
+
+# install a bootloader
+echo -e "\nInstalling bootloader\n"
+sleep 2
+pacman -S --needed --noconfirm grub efibootmgr os-prober
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+grub-mkconfig -o /boot/grub/grub.cfg
+echo -e "\nDone\n"
+sleep 2
+
+
+# configure pacman
+echo -e "\nConfiguring pacman\n"
+sleep 2
+sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
+pacman -Syu --noconfirm
+pacman -S --needed --noconfirm pacman-contrib pacutils
+echo -e "\nDone\n"
+sleep 2
+
+
+# enable and speed up package builds
+echo -e "\nEnabling and speeding up package builds\n"
+sleep 2
+pacman -S --needed --noconfirm base-devel git
+sed -i "s/#MAKEFLAGS=\"-j[0-9]*\"/MAKEFLAGS=\"-j"$buildThreads"\"/g" /etc/makepkg.conf
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# install all needed packages
+#############################
+
+echo -e "\nInstalling all needed packages\n"
+sleep 2
+
+
+# essential packages
+echo -e "\nInstalling essential packages\n"
+sleep 2
+pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils exfat-utils findutils git hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector shellcheck sudo texinfo tldr ufw unzip vim zip zoxide
+echo -e "\nDone\n"
+sleep 2
+
+
+# kde plasma packages
+echo -e "\nInstalling kde plasma\n"
+sleep 2
+pacman -S --needed --noconfirm kde-graphics kde-system kde-utilities plasma sddm xorg
+echo -e "\nDone\n"
+sleep 2
+
+
+# printing packages
+echo -e "\nInstalling printing packages\n"
+sleep 2
+pacman -S --needed --noconfirm print-manager
+echo -e "\nDone\n"
+sleep 2
+
+
+# graphics drivers
+echo -e "\nInstalling graphics drivers\n"
+sleep 2
+if [ "$graphicsVendor" == amd ]
+then
+  pacman -S --needed --noconfirm mesa lib32-mesa lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau vulkan-radeon xf86-video-amdgpu
+fi
+if [ "$graphicsVendor" == intel ]
+then
+  pacman -S --needed --noconfirm xf86-video-intel mesa lib32-mesa vulkan-intel
+fi
+if [ "$graphicsVendor" == nvidia ]
+then
+  pacman -S --needed --noconfirm nvidia nvidia-utils lib32-nvidia-utils
+fi
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+# dependencies 
+echo -e "\nInstalling dependencies\n"
+sleep 2
+
+
+# printing
+pacman -S --needed --noconfirm --asdeps avahi cups cups-pdf nss-mdns system-config-printer usbutils
+#the following sets the packages as dependencies for print-manager
+package=print-manager
+dependsOn=("avahi" "cups" "cups-pdf" "nss-mdns" "system-config-printer" "usbutils")
+package=$(ls /var/lib/pacman/local | grep -i "$package")
+for n in "${dependsOn[@]}";
+do
+    needed=$(grep -io "$n" /var/lib/pacman/local/"$package"/desc)
+    if [ -z "$needed" ]
+    then
+        sed -i "s/%DEPENDS%/%DEPENDS%\n""$n""/g" /var/lib/pacman/local/"$package"/desc
+    fi
+done
+
+
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# enable network manager and ssdm to boot into KDE Plasma
+#########################################################
+
+# enable network manager
+echo -e "\nEnabling Network Manager\n"
+sleep 2
+systemctl enable NetworkManager
+echo -e "\nDone\n"
+sleep 2
+
+
+# enable sddm
+echo -e "\nEnabling KDE Plasma\n"
+sleep 2
+systemctl enable sddm
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# import files
+##############
+
+# import custom config files
+if [ "$customConfig" == true ]
+then
+  echo -e "\nImporting custom config files\n"
+  sleep 2
+  mkdir /home/"$userName"/Desktop
+  chown -R "$userName":users /home/"$userName"/Desktop
+  git clone https://github.com/ksan314/personal /home/"$userName"/personal
+  chown -R "$userName":users /home/"$userName"/personal
+  cp /home/"$userName"/personal/arch/packages.txt /home/"$userName"/Desktop
+  echo -e "\nDone\n"
+  sleep 2
+fi
+
+
+# save arch repo
+echo -e "\nSaving arch repo\n"
+sleep 2
+git clone "$archURL" /home/"$userName"/arch
+chown -R "$userName":users /home/"$userName"/arch
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# exit the chroot environment (does this automatically when script ends)
+########################################################################
+
+echo -e "\nExiting the chroot environment\n"
+sleep 2
+
+

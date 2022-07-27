@@ -1,0 +1,526 @@
+#!/bin/bash
+# this script gets user input, automatically gets system information, checks to see if system is ready for install, creates a 1GB FAT32 efi partition and an ext4 root partition that takes up the rest of the disk, installs linux, chroots into system and runs chroot script, then reboots into KDE Plasma
+
+
+
+
+
+
+
+
+
+
+# get user input
+################
+
+# get username
+while true
+do
+read -rp $'\n'"Enter new username: " userName
+    if [ -z "$userName" ]
+    then
+        echo -e "\nYou must enter a username\n"
+    else
+        read -rp $'\n'"Are you sure you want to use the username \"$userName\"? [Y/n] " usernameConfirm
+        usernameConfirm=${usernameConfirm:-Y}
+        case $usernameConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+    fi
+done
+
+
+# get user password
+while true
+do
+read -srp $'\n'"Enter new password for $userName: " userPassword1
+read -srp $'\n'"Confirm new password for $userName: " userPassword2
+    if [ "$userPassword1" != "$userPassword2" ]
+    then
+        echo -e "\nPasswords do not match, try again\n"
+    elif [ -z "$userPassword1" ] || [ -z "$userPassword2" ]
+    then
+        echo -e "\nPassword cannot be blank, try again\n"
+    else
+        userPassword=$userPassword1
+        break
+    fi
+done
+
+
+# get root password
+while true
+do
+read -srp $'\n'"Enter new root password: " rootPassword1
+read -srp $'\n'"Confirm new root password: " rootPassword2
+    if [ "$rootPassword1" != "$rootPassword2" ]
+    then
+        echo -e "\nPasswords do not match, try again\n"
+
+    elif [ -z "$rootPassword1" ] || [ -z "$rootPassword2" ]
+    then
+        echo -e "\nPassword cannot be blank, try again\n"
+
+    else
+        rootPassword=$rootPassword1
+        break
+    fi
+done
+
+
+# get hostname
+while true
+do
+read -rp $'\n'"Enter new name for this device: " hostName
+    if [ -z "$hostName" ]
+    then
+        echo -e "\nYou must enter a name for this device\n"
+    else
+        read -rp $'\n'"Are you sure you want to use the name \"$hostName\" for this device? [Y/n] " hostnameConfirm
+        hostnameConfirm=${hostnameConfirm:-Y}
+        case $hostnameConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+    fi
+done
+
+
+# get timezone
+mapfile -t timeZones < <(timedatectl list-timezones)
+PS3="Enter the number for your current timezone: "
+select timeZone in "${timeZones[@]}"
+do
+    if (( REPLY > 0 && REPLY <= "${#timeZones[@]}" ))
+    then
+        read -rp $'\n'"Are you sure you want to select the timezone \"$timeZone\"? [Y/n] " zoneConfirm
+        zoneConfirm=${zoneConfirm:-Y}
+            case $zoneConfirm in
+                [yY][eE][sS]|[yY]) break;;
+                [nN][oO]|[nN]);;
+                *);;
+            esac
+            REPLY=
+    else
+        echo -e "\nInvalid option. Try another one\n"
+        sleep 2
+        REPLY=
+    fi
+done
+
+
+# get disk name
+mapfile -t availableDisks < <(lsblk -o PATH,SIZE,TYPE,MODEL,PTTYPE | grep -i disk)
+PS3="Enter the number for the disk you want to use: "
+select selectedDisk in "${availableDisks[@]}"
+do
+  if (( REPLY > 0 && REPLY <= "${#availableDisks[@]}" ))
+  then
+    read -rp $'\n'"Are you sure you want to use the disk $selectedDisk? [Y/n] " diskConfirm
+    diskConfirm=${diskConfirm:-Y}
+            case $diskConfirm in
+                [yY][eE][sS]|[yY]) break;;
+                [nN][oO]|[nN]);;
+                *);;
+            esac
+            REPLY=
+  else
+    echo -e "\nInvalid option. Try another one\n"
+    sleep 2
+    REPLY=
+  fi
+done
+diskName=$(lsblk -o PATH,SIZE,TYPE,MODEL,PTTYPE | grep -i "$selectedDisk" | awk '{print $1}')
+
+
+# get custom config
+while true
+do
+read -rp $'\n'"Would you like to include the repo owner's custom configurations? (Includes colored output for various bash commands, anti-malware scanners, virtual machine config, and plasma config) [Y/n] " customConfig
+    customConfig=${customConfig:-Y}
+    if [ "$customConfig" == Y ] || [ "$customConfig" == y ] || [ "$customConfig" == yes ] || [ "$customConfig" == YES ] || [ "$customConfig" == Yes ]
+    then
+        customConfig=true
+        read -rp $'\n'"Are you sure you want to include the repo owner's custom configurations? [Y/n] " customconfigConfirm
+        customconfigConfirm=${customconfigConfirm:-Y}
+        case $customconfigConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+    else
+        customConfig=false
+        read -rp $'\n'"Are you sure you do NOT want to use the repo owner's custom configurations? [Y/n] " customconfigConfirm
+        customconfigConfirm=${customconfigConfirm:-Y}
+        case $customconfigConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+    fi
+done
+
+
+# user input ended
+echo -e "\nNo more user input needed\n"
+sleep 5
+
+
+
+
+
+
+
+
+
+
+# automatically get system information
+######################################
+
+echo -e "\nAutomatically getting system information\n"
+sleep 2
+
+
+# install packages needed to get system information
+echo -e "\nInstalling packages needed to get system information\n"
+sleep 2
+pacman -S --needed --noconfirm hwinfo lshw
+echo -e "\nDone\n"
+sleep 2
+
+
+# get arch url
+echo -e "\nGetting arch repo url\n"
+sleep 2
+archURL=$(grep -i url /root/arch/.git/config | awk '{print $3}')
+echo -e "\narch repo url set to \"$archURL\"\n"
+sleep 3
+
+
+# is disk an nvme?
+echo -e "\nDetecting if "$diskName" is an nvme\n"
+sleep 2
+if nvme="$(echo -e "$diskName" | grep -io nvme)"
+then
+  nvme=true
+  echo -e "\n'$diskName' IS detected as an nvme\n"
+  sleep 3
+else
+  nvme=false
+  echo -e "\n'$diskName' is NOT detected as an nvme\n"
+  sleep 3
+fi
+
+
+# get number of cpu threads for building packages
+echo -e "\nGetting number of cpu threads to use for building packages\n"
+sleep 2
+cpuThreads=$(hwinfo --cpu | grep -i 'Units' | awk '{print $2}' | head -n 1)
+echo -e "\nthe system will use "$cpuThreads" cpu threads for building packages\n"
+sleep 3
+
+
+
+# get processor vendor
+echo -e "\nGetting processor vendor\n"
+sleep 2
+processorVendor=$(hwinfo --cpu | grep -i vendor | grep -io 'amd\|intel' | awk '{print tolower($0)}' | head -n 1)
+echo -e "\nprocessor vendor is set to \"$processorVendor\"\n"
+sleep 3
+
+
+# get graphics vendor
+echo -e "\nGetting graphics vendor\n"
+sleep 2
+graphicsVendor=$(hwinfo --gfxcard | grep -i vendor | grep -io 'amd\|ati\|intel\|nvidia' | awk '{print tolower($0)}' | head -n 1)
+if [ "$graphicsVendor" == ati ]
+then
+    graphicsVendor=amd
+fi
+echo -e "\ngraphics vendor is set to \"$graphicsVendor\"\n"
+sleep 3
+
+
+# done automatically getting system information
+echo -e "\nDone getting system information\n"
+sleep 5
+
+
+
+
+
+
+
+
+
+
+# save inputs that will be needed for chroot script in a file that will be sourced later
+########################################################################################
+
+echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $customConfig $archURL $nvme $cpuThreads $processorVendor $graphicsVendor" > ./confidentials
+# graphicsVendor must always be last, since it will sometimes be set to "" depending on the system
+
+
+
+
+
+
+
+
+
+
+# verify the system is ready for install
+########################################
+
+# verify that the system is booted in UEFI mode
+echo -e "\nVerifying UEFI mode\n"
+sleep 2
+ls /sys/firmware/efi/efivars
+echo -e "\nDone\n"
+sleep 2
+
+
+# verify that the internet is working
+echo -e "\nVerifying the internet is working\n"
+sleep 2
+ping -c 5 archlinux.org
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# configure disk and partitions
+###############################
+
+# wipe disk
+#echo -e "\nWiping disk\n"
+#sleep 2
+#wipefs --all "$diskName"
+#echo -e "\nDone\n"
+#sleep 2
+
+
+# create partitions
+echo -e "\nCreating partitions\n"
+sleep 2
+echo -e "g\n n\n \n \n +1G\n y\n t\n 1\n n\n \n \n \n y\n t\n \n 23\n w\n" | fdisk "$diskName"
+
+#g\n    create new GPT partition table
+
+# create efi partition
+#n\n    create new partition
+#\n     set default partition number
+#\n     set default first sector
+#+1G\n  select last sector such that the new partition is 1GB in size
+#y\n    accept prompt if given
+#t\n    change partition type
+#1\n    set partition type to efi
+
+# create root partition
+#n\n    create new partition
+#\n     set default partition number
+#\n     set default first sector
+#\n     set default last sector
+#y\n    accept prompt if given
+#t\n    change partition type
+#\n     select default partition
+#23\n   set partition type to Linux root (x86-64)
+
+# write changes and exit
+#w\n    write changes to disk and exit
+
+echo -e "\nDone\n"
+sleep 2
+
+
+# format partitions
+if [ "$nvme" == true ]
+then
+  echo -e "\nFormatting partitions\n"
+  sleep 2
+  yes | mkfs.fat -F32 "$diskName"p1
+  yes | mkfs.ext4 "$diskName"p2
+  echo -e "\nDone\n"
+  sleep 2
+fi
+if [ "$nvme" == false ]
+then
+  echo -e "\nFormatting partitions\n"
+  sleep 2
+  yes | mkfs.fat -F32 "$diskName"1
+  yes | mkfs.ext4 "$diskName"2
+  echo -e "\nDone\n"
+  sleep 2
+fi
+
+
+# mount partitions
+if [ "$nvme" == true ]
+then
+  echo -e "\nMounting partitions\n"
+  sleep 2
+  mount "$diskName"p2 /mnt
+  mkdir /mnt/boot
+  mount "$diskName"p1 /mnt/boot
+  echo -e "\nDone\n"
+  sleep 2
+fi
+if [ "$nvme" == false ]
+then
+  echo -e "\nMounting partitions\n"
+  sleep 2
+  mount "$diskName"2 /mnt
+  mkdir /mnt/boot
+  mount "$diskName"1 /mnt/boot
+  echo -e "\nDone\n"
+  sleep 2
+fi
+
+
+
+
+
+
+
+
+
+
+# update the system clock
+#########################
+
+echo -e "\nUpdating Clock\n"
+sleep 2
+timedatectl set-ntp true
+echo -e "\nDone\n\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# install linux packages
+########################
+
+echo -e "\nInstalling linux packages\n"
+sleep 2
+pacstrap /mnt base linux linux-firmware
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# generate an fstab file
+########################
+
+echo -e "\nGenerating fstab file\n"
+sleep 2
+genfstab -U /mnt >> /mnt/etc/fstab
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# prepeare to change root into the new system and run chroot script
+###################################################################
+
+echo -e "\nChrooting into new environment and running chroot script\n"
+sleep 2
+
+
+# copy the confidentials file to destination system's root partition so that chroot script can access the file from inside of chroot
+cp ./confidentials /mnt/root/
+
+
+# copy the chroot script to destination system's root partition
+cp ./chroot /mnt/root/
+
+
+# change file permission of chroot script to make it executable
+chmod +x /mnt/root/chroot
+
+
+# change root into the new environment and run chroot script
+arch-chroot /mnt /root/chroot
+
+
+
+
+
+
+
+
+
+
+# chroot script ended
+#####################
+
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
+# finish installation
+#####################
+
+# remove files that are now unnecessary
+echo -e "\nDeleting user input\n"
+sleep 2
+rm /mnt/root/{confidentials,chroot}
+echo -e "\nDone\n"
+sleep 2
+
+
+# unmount all partitions
+echo -e "\nUnmounting partitions\n"
+sleep 2
+umount -R /mnt
+echo -e "\nDone\n"
+sleep 2
+
+
+# reboot the system
+echo -e "\nInstallation Complete\n"
+sleep 2
+echo -e "\nRebooting\n"
+sleep 5
+reboot
