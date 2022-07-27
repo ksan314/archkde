@@ -347,13 +347,14 @@ echo -e "\nDone\n"
 sleep 2
 
 
-# format partitions
+# create filesystems
+#pacman -S --needed --noconfirm btrfs-progs
 if [ "$nvme" == true ]
 then
-  echo -e "\nFormatting partitions\n"
+  echo -e "\nCreating filesystems\n"
   sleep 2
   yes | mkfs.fat -F32 "$diskName"p1
-  yes | mkfs.ext4 "$diskName"p2
+  yes | mkfs.btrfs "$diskName"p2
   echo -e "\nDone\n"
   sleep 2
 fi
@@ -362,29 +363,57 @@ then
   echo -e "\nFormatting partitions\n"
   sleep 2
   yes | mkfs.fat -F32 "$diskName"1
-  yes | mkfs.ext4 "$diskName"2
+  yes | mkfs.btrfs "$diskName"2
   echo -e "\nDone\n"
   sleep 2
 fi
 
 
-# mount partitions
+# mount filesystems
 if [ "$nvme" == true ]
 then
-  echo -e "\nMounting partitions\n"
+  echo -e "\nMounting filesystems\n"
   sleep 2
   mount "$diskName"p2 /mnt
+  btrfs subvolume create /mnt/@
+  btrfs subvolume create /mnt/@home
+  btrfs subvolume create /mnt/@snapshots
+  btrfs subvolume create /mnt/@var_log
+  umount /mnt
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@ "$diskName"p2 /mnt
+  # maybe remove noatime?
   mkdir /mnt/boot
+  mkdir /mnt/home
+  mkdir /mnt/.snapshots
+  mkdir /mnt/var_log
+  # maybe need -p option for the above mkdir commands???
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@home "$diskName"p2 /mnt/home
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots "$diskName"p2 /mnt/.snapshots
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"p2 /mnt/var_log
   mount "$diskName"p1 /mnt/boot
   echo -e "\nDone\n"
   sleep 2
 fi
 if [ "$nvme" == false ]
 then
-  echo -e "\nMounting partitions\n"
+  echo -e "\nMounting filesystems\n"
   sleep 2
   mount "$diskName"2 /mnt
+  btrfs subvolume create /mnt/@
+  btrfs subvolume create /mnt/@home
+  btrfs subvolume create /mnt/@snapshots
+  btrfs subvolume create /mnt/@var_log
+  umount /mnt
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@ "$diskName"2 /mnt
+  # maybe remove noatime?
   mkdir /mnt/boot
+  mkdir /mnt/home
+  mkdir /mnt/.snapshots
+  mkdir /mnt/var_log
+  # maybe need -p option for the above mkdir commands???
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@home "$diskName"2 /mnt/home
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots "$diskName"2 /mnt/.snapshots
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"2 /mnt/var_log
   mount "$diskName"1 /mnt/boot
   echo -e "\nDone\n"
   sleep 2
