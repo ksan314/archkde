@@ -108,7 +108,7 @@ sleep 2
 echo -e "\nInstalling and configuring bootloader\n"
 sleep 2
 sed -i 's/MODULES=()/MODULES(btrfs)/' /etc/mkinitcpio.conf
-# put btrfs info modules instead of hooks due to a bug that is documented on the arch wiki btrfs page
+# put btrfs into modules instead of hooks due to a bug that is documented on the arch wiki btrfs page
 mkinitcpio -p linux
 pacman -S --needed --noconfirm grub efibootmgr os-prober
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
