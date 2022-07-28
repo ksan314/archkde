@@ -409,7 +409,7 @@ then
   mkdir /mnt/boot
   mkdir /mnt/home
   mkdir /mnt/.snapshots
-  mkdir /mnt/var_log
+  mkdir -p /mnt/var/log
   # maybe need -p option for the above mkdir commands???
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@home "$diskName"2 /mnt/home
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots "$diskName"2 /mnt/.snapshots
