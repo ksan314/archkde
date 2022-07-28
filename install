@@ -434,7 +434,7 @@ fi
 echo -e "\nUpdating Clock\n"
 sleep 2
 timedatectl set-ntp true
-echo -e "\nDone\n\n"
+echo -e "\nDone\n"
 sleep 2
 
 
