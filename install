@@ -348,15 +348,13 @@ sleep 2
 
 
 # create filesystems
-#pacman -S --needed --noconfirm btrfs-progs
+echo -e "\nCreating filesystems\n"
+sleep 2
+pacman -S --needed --noconfirm btrfs-progs snapper
 if [ "$nvme" == true ]
 then
-  echo -e "\nCreating filesystems\n"
-  sleep 2
   yes | mkfs.fat -F32 "$diskName"p1
-  yes | mkfs.btrfs "$diskName"p2
-  echo -e "\nDone\n"
-  sleep 2
+  yes | mkfs.btrfs "$diskName"p2 
 fi
 if [ "$nvme" == false ]
 then
@@ -364,16 +362,16 @@ then
   sleep 2
   yes | mkfs.fat -F32 "$diskName"1
   yes | mkfs.btrfs "$diskName"2
-  echo -e "\nDone\n"
-  sleep 2
 fi
+echo -e "\nDone\n"
+sleep 2
 
 
 # mount and configure filesystems
+echo -e "\nMounting and configuring filesystems\n"
+sleep 2
 if [ "$nvme" == true ]
 then
-  echo -e "\nMounting and configuring filesystems\n"
-  sleep 2
   mount "$diskName"p2 /mnt
   btrfs subvolume create /mnt/@
   btrfs subvolume create /mnt/@home
@@ -391,13 +389,9 @@ then
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots "$diskName"p2 /mnt/.snapshots
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"p2 /mnt/var/log
   mount "$diskName"p1 /mnt/boot
-  echo -e "\nDone\n"
-  sleep 2
 fi
 if [ "$nvme" == false ]
 then
-  echo -e "\nMounting filesystems\n"
-  sleep 2
   mount "$diskName"2 /mnt
   btrfs subvolume create /mnt/@
   btrfs subvolume create /mnt/@home
@@ -415,9 +409,9 @@ then
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots "$diskName"2 /mnt/.snapshots
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"2 /mnt/var/log
   mount "$diskName"1 /mnt/boot
-  echo -e "\nDone\n"
-  sleep 2
 fi
+echo -e "\nDone\n"
+sleep 2
 
 
 
