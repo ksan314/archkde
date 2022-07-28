@@ -413,7 +413,7 @@ then
   # maybe need -p option for the above mkdir commands???
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@home "$diskName"2 /mnt/home
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots "$diskName"2 /mnt/.snapshots
-  mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"2 /mnt/var_log
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"2 /mnt/var/log
   mount "$diskName"1 /mnt/boot
   echo -e "\nDone\n"
   sleep 2
