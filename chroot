@@ -81,7 +81,7 @@ sleep 2
 echo -e "\nConfiguring root user\n"
 sleep 2
 echo -e "$rootPassword\n$rootPassword" | passwd root
-echo -e "root ALL=(ALL:ALL) ALL" >> /etc/sudoers
+# echo -e "root ALL=(ALL:ALL) ALL" >> /etc/sudoers
 echo -e "\nDone\n"
 sleep 2
 
@@ -91,9 +91,12 @@ echo -e "\nConfiguring user \"$userName\"\n"
 sleep 2
 useradd -m -g users -G wheel -s /bin/bash "$userName"
 echo -e "$userPassword\n$userPassword" | passwd "$userName"
-echo -e "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
+# echo -e "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
 echo -e "\nDone\n"
 sleep 2
+
+##########################
+# need to edit sudoers file config commands
 
 
 # enable microcode updates
