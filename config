@@ -180,6 +180,7 @@ sleep 2
 mkdir /etc/pacman.d/hooks
 cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
 # make sure the file is owned by root after copying
+# see "system backup" page on the arch wiki
 echo -e "\nDone\n"
 sleep 2
 
