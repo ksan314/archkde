@@ -185,14 +185,13 @@ echo -e "\nDone\n"
 sleep 2
 
 
-
-
-
-
-
 # create a swap file
 echo -e "\nCreating swap file\n"
 sleep 2
+btrfs subvolume create /@swapfile
+mkdir /swapfile
+chattr +C /swapfile
+mount -o noatime,space_cache=v2,subvol=@swapfile "@diskName"p2 /mnt/swapfile
 dd if=/dev/zero of=/swapfile bs=1024 count="$swapSize" status=progress
 # the above line sets the base size to 1 kB and creates a file with a size equal to bs multiplied by count in bytes
 chmod 0600 /swapfile
@@ -200,6 +199,7 @@ mkswap -U clear /swapfile
 swapon /swapfile
 echo -e "\n# swap file" >> /etc/fstab
 echo -e "/swapfile none swap defaults 0 0" >> /etc/fstab
+# also need to add the @swapfile subvolume to fstab, and remove the discard,autodefrag options from the first subvolume in fstab
 echo -e "\nDone\n"
 sleep 2
 
