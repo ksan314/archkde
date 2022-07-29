@@ -283,7 +283,7 @@ echo "export LESS_TERMCAP_ue=$'\e[0m'" >> /home/"$userName"/.bashrc
 echo "export LESS_TERMCAP_so=$'\e[01;31m'" >> /home/"$userName"/.bashrc
 echo "export LESS_TERMCAP_se=$'\e[0m'" >> /home/"$userName"/.bashrc
 #
-echo -e "\n# enables auto-correct" >> /home/"$userName"/.bashrc
+echo -e "\n# enables cd auto-correct" >> /home/"$userName"/.bashrc
 echo -e "shopt -s cdspell" >> /home/"$userName"/.bashrc
 #
 echo -e "\n# rewrap text on window resize" >> /home/"$userName"/.bashrc
