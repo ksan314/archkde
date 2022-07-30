@@ -219,20 +219,19 @@ else
 fi
 
 
-# get number of cpu threads for building packages
-echo -e "\nGetting number of cpu threads to use for building packages\n"
-sleep 2
-cpuThreads=$(hwinfo --cpu | grep -i 'Units' | awk '{print $2}' | head -n 1)
-echo -e "\nthe system will use "$cpuThreads" cpu threads for building packages\n"
-sleep 3
-
-
-
 # get processor vendor
 echo -e "\nGetting processor vendor\n"
 sleep 2
 processorVendor=$(hwinfo --cpu | grep -i vendor | grep -io 'amd\|intel' | awk '{print tolower($0)}' | head -n 1)
 echo -e "\nprocessor vendor is set to \"$processorVendor\"\n"
+sleep 3
+
+
+# get number of cpu threads for building packages
+echo -e "\nGetting number of cpu threads to use for building packages\n"
+sleep 2
+cpuThreads=$(hwinfo --cpu | grep -i 'Units' | awk '{print $2}' | head -n 1)
+echo -e "\nthe system will use "$cpuThreads" cpu threads for building packages\n"
 sleep 3
 
 
@@ -264,8 +263,8 @@ sleep 5
 # save inputs that will be needed for chroot script in a file that will be sourced later
 ########################################################################################
 
-echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $customConfig $archURL $nvme $cpuThreads $processorVendor $graphicsVendor" > ./confidentials
-# graphicsVendor must always be last, since it will sometimes be set to "" depending on the system
+echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
+# cpuThreads and graphicsVendor must always be last, since it will sometimes be set to "" depending on the system
 
 
 
