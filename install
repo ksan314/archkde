@@ -186,7 +186,7 @@ sleep 5
 
 echo -e "\nInstalling packages needed for installation\n"
 sleep 2
-pacman -S --needed archlinux-keyring hwinfo lshw
+pacman -S --needed --noconfirm archlinux-keyring hwinfo lshw
 echo -e "\nDone\n"
 sleep 2
 
