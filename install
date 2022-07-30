@@ -462,38 +462,19 @@ arch-chroot /mnt /chroot
 
 
 
-# chroot script ended
-#####################
-
-echo -e "\nDone\n"
-sleep 2
-
-
-
-
-
-
-
-
-
-
 # finish installation
 #####################
 
-# remove files that are now unnecessary
-echo -e "\nDeleting user input\n"
+echo -e "\nFinishing installation\n"
 sleep 2
+
+
+# delete variables
 rm /mnt/{confidentials,chroot}
-echo -e "\nDone\n"
-sleep 2
 
 
 # unmount all partitions
-echo -e "\nUnmounting partitions\n"
-sleep 2
 umount -R /mnt
-echo -e "\nDone\n"
-sleep 2
 
 
 # reboot the system
