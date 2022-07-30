@@ -511,7 +511,7 @@ fi
 # remove files
 echo -e "\nRemoving no longer needed files\n"
 sleep 2
-rm -rf /home/"$userName"/arch
+rm -rf /home/"$userName"/archbtrfs
 echo -e "\nDone\n"
 sleep 2
 
