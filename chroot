@@ -33,7 +33,7 @@ sleep 2
 # import user inputs and system information from /root/confidentials (must be the exact same list of variables saved to /root/confidentials during install script)
 echo -e "\nImporting user inputs and system information\n"
 sleep 2
-read -r userName userPassword rootPassword hostName timeZone diskName customConfig archURL nvme processorVendor cpuThreads graphicsVendor < /root/confidentials
+read -r userName userPassword rootPassword hostName timeZone diskName customConfig archURL nvme processorVendor cpuThreads graphicsVendor < /confidentials
 echo -e "\nDone\n"
 sleep 2
 
