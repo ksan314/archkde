@@ -387,12 +387,12 @@ then
   btrfs subvolume create /mnt/@snapshots
   btrfs subvolume create /mnt/@var_log
   umount /mnt
+  mount -o noatime,compress=lzo,space_cache=v2,subvol=@ "$diskName"p2 /mnt
+  # maybe remove noatime? May need to move this line up, below umount /mnt
   mkdir /mnt/boot
   mkdir /mnt/home
   mkdir /mnt/.snapshots
   mkdir -p /mnt/var/log
-  mount -o noatime,compress=lzo,space_cache=v2,subvol=@ "$diskName"p2 /mnt
-  # maybe remove noatime? May need to move this line up, below umount /mnt
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@home "$diskName"p2 /mnt/home
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots "$diskName"p2 /mnt/.snapshots
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"p2 /mnt/var/log
@@ -491,11 +491,11 @@ sleep 2
 
 
 # copy the confidentials file to destination system's root partition so that chroot script can access the file from inside of chroot
-cp ./confidentials /mnt/
+cp ./confidentials /mnt
 
 
 # copy the chroot script to destination system's root partition
-cp ./chroot /mnt/
+cp ./chroot /mnt
 
 
 # change file permission of chroot script to make it executable
