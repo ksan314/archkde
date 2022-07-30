@@ -290,8 +290,8 @@ fi
 # save arch repo
 echo -e "\nSaving arch repo\n"
 sleep 2
-git clone "$archURL" /home/"$userName"/arch
-chown -R "$userName":users /home/"$userName"/arch
+git clone "$archURL" /home/"$userName"/archbtrfs
+chown -R "$userName":users /home/"$userName"/archbtrfs
 echo -e "\nDone\n"
 sleep 2
 
