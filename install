@@ -391,7 +391,7 @@ then
 fi
 if [ "$nvme" == false ]
 then
-mount "$diskName"p2 /mnt
+  mount "$diskName"2 /mnt
   btrfs subvolume create /mnt/@
   btrfs subvolume create /mnt/@home
   btrfs subvolume create /mnt/@snapshots
