@@ -30,12 +30,7 @@ sleep 2
 # import user inputs and system information
 ###########################################
 
-# import user inputs and system information from /root/confidentials (must be the exact same list of variables saved to /root/confidentials during install script)
-echo -e "\nImporting user inputs and system information\n"
-sleep 2
 read -r userName userPassword rootPassword hostName timeZone diskName customConfig archURL nvme processorVendor cpuThreads graphicsVendor < /confidentials
-echo -e "\nDone\n"
-sleep 2
 
 
 
@@ -49,46 +44,29 @@ sleep 2
 # configure pacman and install all needed packages
 ##################################################
 
-# configure pacman
-echo -e "\nConfiguring pacman\n"
+echo -e "\nInstalling packages\n"
 sleep 2
+
+
+# configure pacman
 sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
 pacman -Syu --noconfirm
 pacman -S --needed --noconfirm pacman-contrib pacutils
-echo -e "\nDone\n"
-sleep 2
 
 
-echo -e "\nInstalling all needed packages\n"
-sleep 2
-
-# essential packages
-echo -e "\nInstalling essential packages\n"
-sleep 2
+# install essential packages
 pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils efibootmgr exfat-utils findutils git grub grub-btrfs hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
-echo -e "\nDone\n"
-sleep 2
 
 
-# kde plasma packages
-echo -e "\nInstalling kde plasma\n"
-sleep 2
+# install kde plasma
 pacman -S --needed --noconfirm kde-graphics kde-system kde-utilities plasma sddm xorg
-echo -e "\nDone\n"
-sleep 2
 
 
-# printing packages
-echo -e "\nInstalling printing packages\n"
-sleep 2
+# install printing packages
 pacman -S --needed --noconfirm print-manager
-echo -e "\nDone\n"
-sleep 2
 
 
-# graphics drivers
-echo -e "\nInstalling graphics drivers\n"
-sleep 2
+# install graphics drivers
 if [ "$graphicsVendor" == amd ]
 then
   pacman -S --needed --noconfirm mesa lib32-mesa lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau vulkan-radeon xf86-video-amdgpu
@@ -101,13 +79,9 @@ if [ "$graphicsVendor" == nvidia ]
 then
   pacman -S --needed --noconfirm nvidia nvidia-settings nvidia-utils lib32-nvidia-utils
 fi
-echo -e "\nDone\n"
-sleep 2
 
 
-# dependencies 
-echo -e "\nInstalling dependencies\n"
-sleep 2
+# install dependencies 
 
 # printing
 pacman -S --needed --noconfirm --asdeps avahi cups cups-pdf nss-mdns system-config-printer usbutils
@@ -124,9 +98,6 @@ do
     fi
 done
 
-echo -e "\nDone\n"
-sleep 2
-
 
 
 
@@ -139,90 +110,58 @@ sleep 2
 # configure the system
 ######################
 
-# set the time and language
-echo -e "\nSetting time and language\n"
+echo -e "\nConfiguring the system\n"
 sleep 2
+
+
+# set the time and language
 ln -sf /usr/share/zoneinfo/"$timeZone" /etc/localtime
 hwclock --systohc
 sed -i 's/#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
-echo -e "\nDone\n"
-sleep 2
 
 
 # set the hostname
-echo -e "\nSetting hostname\n"
-sleep 2
 echo -e "$hostName" >> /etc/hostname
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure the network
-echo -e "\nConfiguring Network\n"
-sleep 2
 echo -e "127.0.0.1   localhost" >> /etc/hosts
 echo -e "::1         localhost" >> /etc/hosts
 echo -e "127.0.1.1   $hostName" >> /etc/hosts
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure root user
-echo -e "\nConfiguring root user\n"
-sleep 2
 echo -e "$rootPassword\n$rootPassword" | passwd root
 # echo -e "root ALL=(ALL:ALL) ALL" >> /etc/sudoers
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure user
-echo -e "\nConfiguring user \"$userName\"\n"
-sleep 2
 useradd -m -g users -G wheel -s /bin/bash "$userName"
 echo -e "$userPassword\n$userPassword" | passwd "$userName"
 echo -e "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
-echo -e "\nDone\n"
-sleep 2
 
 
 # enable microcode updates
-echo -e "\nEnabling microcode updates\n"
-sleep 2
 pacman -S --needed --noconfirm "$processorVendor"-ucode
-echo -e "\nDone\n"
-sleep 2 
 
 
 # configure mkinitcpio.conf
-echo -e "\nConfiguring mkinitcpio.conf\n"
-sleep 2
 sed -i 's/MODULES=()/MODULES=(btrfs)/' /etc/mkinitcpio.conf
 # put btrfs into modules instead of hooks due to a bug that is documented on the arch wiki btrfs page. Also see the mkinitcpio arch wiki page for configuring mkinitcpio file
 mkinitcpio -p linux
-echo -e "\nDone\n"
-sleep 2
 
 
 # install and configure a bootloader
-echo -e "\nInstalling and configuring bootloader\n"
-sleep 2
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
-echo -e "\nDone\n"
-sleep 2
 
 
 # enable and speed up package builds
-if [ -z "$cpuThreads" ]
-    then
-        echo -e "\nEnabling and speeding up package builds\n"
-        sleep 2
-        sed -i "s/#MAKEFLAGS=\"-j[0-9]*\"/MAKEFLAGS=\"-j"$cpuThreads"\"/g" /etc/makepkg.conf
-        echo -e "\nDone\n"
-        sleep 2
+if [ "$cpuThreads" != null ]
+then
+    sed -i "s/#MAKEFLAGS=\"-j[0-9]*\"/MAKEFLAGS=\"-j"$cpuThreads"\"/g" /etc/makepkg.conf
 fi
 
 
@@ -237,20 +176,16 @@ fi
 # enable network manager and ssdm to boot into KDE Plasma
 #########################################################
 
+echo -e "\nEnabling KDE Plasma\n"
+sleep 2
+
+
 # enable network manager
-echo -e "\nEnabling Network Manager\n"
-sleep 2
 systemctl enable NetworkManager
-echo -e "\nDone\n"
-sleep 2
 
 
 # enable sddm
-echo -e "\nEnabling KDE Plasma\n"
-sleep 2
 systemctl enable sddm
-echo -e "\nDone\n"
-sleep 2
 
 
 
@@ -264,28 +199,24 @@ sleep 2
 # import files
 ##############
 
+echo -e "\nImporting files\n"
+sleep 2
+
+
 # import custom config files
 if [ "$customConfig" == true ]
 then
-  echo -e "\nImporting custom config files\n"
-  sleep 2
-  mkdir /home/"$userName"/Desktop
-  chown -R "$userName":users /home/"$userName"/Desktop
-  git clone https://github.com/ksan314/personal /home/"$userName"/personal
-  chown -R "$userName":users /home/"$userName"/personal
-  cp /home/"$userName"/personal/arch/packages.txt /home/"$userName"/Desktop
-  echo -e "\nDone\n"
-  sleep 2
+    mkdir /home/"$userName"/Desktop
+    chown -R "$userName":users /home/"$userName"/Desktop
+    git clone https://github.com/ksan314/personal /home/"$userName"/personal
+    chown -R "$userName":users /home/"$userName"/personal
+    cp /home/"$userName"/personal/arch/packages.txt /home/"$userName"/Desktop
 fi
 
 
 # save arch repo
-echo -e "\nSaving arch repo\n"
-sleep 2
 git clone "$archURL" /home/"$userName"/archbtrfs
 chown -R "$userName":users /home/"$userName"/archbtrfs
-echo -e "\nDone\n"
-sleep 2
 
 
 
