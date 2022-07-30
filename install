@@ -199,7 +199,7 @@ sleep 2
 # get arch url
 echo -e "\nGetting arch repo url\n"
 sleep 2
-archURL=$(grep -i url /root/arch/.git/config | awk '{print $3}')
+archURL=$(grep -i url /root/archbtrfs/.git/config | awk '{print $3}')
 echo -e "\narch repo url set to \"$archURL\"\n"
 sleep 3
 
