@@ -46,6 +46,96 @@ sleep 2
 
 
 
+# configure pacman and install all needed packages
+##################################################
+
+# configure pacman
+echo -e "\nConfiguring pacman\n"
+sleep 2
+sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
+pacman -Syu --noconfirm
+pacman -S --needed --noconfirm pacman-contrib pacutils
+echo -e "\nDone\n"
+sleep 2
+
+
+echo -e "\nInstalling all needed packages\n"
+sleep 2
+
+# essential packages
+echo -e "\nInstalling essential packages\n"
+sleep 2
+pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils exfat-utils findutils git hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
+echo -e "\nDone\n"
+sleep 2
+
+
+# kde plasma packages
+echo -e "\nInstalling kde plasma\n"
+sleep 2
+pacman -S --needed --noconfirm kde-graphics kde-system kde-utilities plasma sddm xorg
+echo -e "\nDone\n"
+sleep 2
+
+
+# printing packages
+echo -e "\nInstalling printing packages\n"
+sleep 2
+pacman -S --needed --noconfirm print-manager
+echo -e "\nDone\n"
+sleep 2
+
+
+# graphics drivers
+echo -e "\nInstalling graphics drivers\n"
+sleep 2
+if [ "$graphicsVendor" == amd ]
+then
+  pacman -S --needed --noconfirm mesa lib32-mesa lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau vulkan-radeon xf86-video-amdgpu
+fi
+if [ "$graphicsVendor" == intel ]
+then
+  pacman -S --needed --noconfirm xf86-video-intel mesa lib32-mesa vulkan-intel
+fi
+if [ "$graphicsVendor" == nvidia ]
+then
+  pacman -S --needed --noconfirm nvidia nvidia-settings nvidia-utils lib32-nvidia-utils
+fi
+echo -e "\nDone\n"
+sleep 2
+
+
+# dependencies 
+echo -e "\nInstalling dependencies\n"
+sleep 2
+
+# printing
+pacman -S --needed --noconfirm --asdeps avahi cups cups-pdf nss-mdns system-config-printer usbutils
+#the following sets the packages as dependencies for print-manager
+package=print-manager
+dependsOn=("avahi" "cups" "cups-pdf" "nss-mdns" "system-config-printer" "usbutils")
+package=$(ls /var/lib/pacman/local | grep -i "$package")
+for n in "${dependsOn[@]}";
+do
+    needed=$(grep -io "$n" /var/lib/pacman/local/"$package"/desc)
+    if [ -z "$needed" ]
+    then
+        sed -i "s/%DEPENDS%/%DEPENDS%\n""$n""/g" /var/lib/pacman/local/"$package"/desc
+    fi
+done
+
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
 # configure the system
 ######################
 
@@ -126,16 +216,6 @@ echo -e "\nDone\n"
 sleep 2
 
 
-# configure pacman
-echo -e "\nConfiguring pacman\n"
-sleep 2
-sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
-pacman -Syu --noconfirm
-pacman -S --needed --noconfirm pacman-contrib pacutils
-echo -e "\nDone\n"
-sleep 2
-
-
 # enable and speed up package builds
 if [ -z "$cpuThreads" ]
     then
@@ -146,92 +226,6 @@ if [ -z "$cpuThreads" ]
         echo -e "\nDone\n"
         sleep 2
 fi
-
-
-
-
-
-
-
-
-
-
-# install all needed packages
-#############################
-
-echo -e "\nInstalling all needed packages\n"
-sleep 2
-
-
-# essential packages
-echo -e "\nInstalling essential packages\n"
-sleep 2
-pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils exfat-utils findutils git hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
-echo -e "\nDone\n"
-sleep 2
-
-
-# kde plasma packages
-echo -e "\nInstalling kde plasma\n"
-sleep 2
-pacman -S --needed --noconfirm kde-graphics kde-system kde-utilities plasma sddm xorg
-echo -e "\nDone\n"
-sleep 2
-
-
-# printing packages
-echo -e "\nInstalling printing packages\n"
-sleep 2
-pacman -S --needed --noconfirm print-manager
-echo -e "\nDone\n"
-sleep 2
-
-
-# graphics drivers
-echo -e "\nInstalling graphics drivers\n"
-sleep 2
-if [ "$graphicsVendor" == amd ]
-then
-  pacman -S --needed --noconfirm mesa lib32-mesa lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau vulkan-radeon xf86-video-amdgpu
-fi
-if [ "$graphicsVendor" == intel ]
-then
-  pacman -S --needed --noconfirm xf86-video-intel mesa lib32-mesa vulkan-intel
-fi
-if [ "$graphicsVendor" == nvidia ]
-then
-  pacman -S --needed --noconfirm nvidia nvidia-settings nvidia-utils lib32-nvidia-utils
-fi
-echo -e "\nDone\n"
-sleep 2
-
-
-
-
-
-# dependencies 
-echo -e "\nInstalling dependencies\n"
-sleep 2
-
-
-# printing
-pacman -S --needed --noconfirm --asdeps avahi cups cups-pdf nss-mdns system-config-printer usbutils
-#the following sets the packages as dependencies for print-manager
-package=print-manager
-dependsOn=("avahi" "cups" "cups-pdf" "nss-mdns" "system-config-printer" "usbutils")
-package=$(ls /var/lib/pacman/local | grep -i "$package")
-for n in "${dependsOn[@]}";
-do
-    needed=$(grep -io "$n" /var/lib/pacman/local/"$package"/desc)
-    if [ -z "$needed" ]
-    then
-        sed -i "s/%DEPENDS%/%DEPENDS%\n""$n""/g" /var/lib/pacman/local/"$package"/desc
-    fi
-done
-
-
-echo -e "\nDone\n"
-sleep 2
 
 
 
