@@ -517,6 +517,4 @@ sleep 2
 
 
 # reboot
-echo -e "\nRebooting\n"
-sleep 5
-reboot
+echo -e "\nConfig complete. Enter "reboot" to reboot the system\n"
