@@ -549,4 +549,4 @@ sleep 2
 
 
 # reboot the system
-echo -e "\nInstallation Complete. Enter "reboot" to reboot the system\n"
+echo -e "\nInstallation Complete. Enter \"reboot\" to reboot the system\n"
