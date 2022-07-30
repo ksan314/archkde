@@ -110,7 +110,7 @@ sleep 2
 # install and configure a bootloader
 echo -e "\nInstalling and configuring bootloader\n"
 sleep 2
-pacman -S --needed --noconfirm grub grub-btrfs efibootmgr
+pacman -S --needed --noconfirm efibootmgr grub grub-btrfs
 sed -i 's/MODULES=()/MODULES(btrfs)/' /etc/mkinitcpio.conf
 # put btrfs into modules instead of hooks due to a bug that is documented on the arch wiki btrfs page. Also see the mkinitcpio arch wiki page for configuring mkinitcpio file
 mkinitcpio -p linux
