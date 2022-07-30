@@ -110,7 +110,7 @@ sleep 2
 # install and configure a bootloader
 echo -e "\nInstalling and configuring bootloader\n"
 sleep 2
-pacman -S --needed --noconfirm grub efibootmgr
+pacman -S --needed --noconfirm grub grub-btrfs efibootmgr
 sed -i 's/MODULES=()/MODULES(btrfs)/' /etc/mkinitcpio.conf
 # put btrfs into modules instead of hooks due to a bug that is documented on the arch wiki btrfs page. Also see the mkinitcpio arch wiki page for configuring mkinitcpio file
 mkinitcpio -p linux
@@ -159,7 +159,7 @@ sleep 2
 # essential packages
 echo -e "\nInstalling essential packages\n"
 sleep 2
-pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils exfat-utils findutils git grub-btrfs hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
+pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils exfat-utils findutils git hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
 echo -e "\nDone\n"
 sleep 2
 
