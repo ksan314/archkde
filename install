@@ -170,7 +170,7 @@ done
 
 # user input ended
 echo -e "\nNo more user input needed\n"
-sleep 5
+sleep 3
 
 
 
@@ -187,8 +187,6 @@ sleep 5
 echo -e "\nInstalling packages needed for installation\n"
 sleep 2
 pacman -S --needed --noconfirm archlinux-keyring hwinfo lshw
-echo -e "\nDone\n"
-sleep 2
 
 
 
@@ -207,59 +205,40 @@ sleep 2
 
 
 # get arch url
-echo -e "\nGetting arch repo url\n"
-sleep 2
 archURL=$(grep -i url /root/archbtrfs/.git/config | awk '{print $3}')
-echo -e "\narch repo url set to \"$archURL\"\n"
-sleep 3
 
 
 # is disk an nvme?
-echo -e "\nDetecting if "$diskName" is an nvme\n"
-sleep 2
 if nvme="$(echo -e "$diskName" | grep -io nvme)"
 then
   nvme=true
-  echo -e "\n'$diskName' IS detected as an nvme\n"
-  sleep 3
 else
   nvme=false
-  echo -e "\n'$diskName' is NOT detected as an nvme\n"
-  sleep 3
 fi
 
 
 # get processor vendor
-echo -e "\nGetting processor vendor\n"
-sleep 2
 processorVendor=$(hwinfo --cpu | grep -i vendor | grep -io 'amd\|intel' | awk '{print tolower($0)}' | head -n 1)
-echo -e "\nprocessor vendor is set to \"$processorVendor\"\n"
-sleep 3
 
 
 # get number of cpu threads for building packages
-echo -e "\nGetting number of cpu threads to use for building packages\n"
-sleep 2
 cpuThreads=$(hwinfo --cpu | grep -i 'Units' | awk '{print $2}' | head -n 1)
-echo -e "\nthe system will use "$cpuThreads" cpu threads for building packages\n"
-sleep 3
+if [ -z "$cpuThreads" ]
+then
+    cpuThreads=null
+fi
 
 
 # get graphics vendor
-echo -e "\nGetting graphics vendor\n"
-sleep 2
 graphicsVendor=$(hwinfo --gfxcard | grep -i vendor | grep -io 'amd\|ati\|intel\|nvidia' | awk '{print tolower($0)}' | head -n 1)
 if [ "$graphicsVendor" == ati ]
 then
     graphicsVendor=amd
 fi
-echo -e "\ngraphics vendor is set to \"$graphicsVendor\"\n"
-sleep 3
-
-
-# done automatically getting system information
-echo -e "\nDone getting system information\n"
-sleep 5
+if [ -z "$graphicsVendor" ]
+then
+    graphicsVendor=null
+fi
 
 
 
@@ -274,7 +253,6 @@ sleep 5
 ########################################################################################
 
 echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
-# cpuThreads and graphicsVendor must always be last, since it will sometimes be set to "" depending on the system
 
 
 
@@ -288,44 +266,33 @@ echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $cu
 # verify the system is ready for install
 ########################################
 
+echo -e "\nVerifying the system is ready for arch installation\n"
+sleep 2
+
+
 # verify that the system is booted in UEFI mode
-echo -e "\nVerifying UEFI mode\n"
-sleep 2
 ls /sys/firmware/efi/efivars
-echo -e "\nDone\n"
-sleep 2
 
 
 # verify that the internet is working
-echo -e "\nVerifying the internet is working\n"
-sleep 2
 ping -c 5 archlinux.org
-echo -e "\nDone\n"
+
+
+
+
+
+
+
+
+
+
+# configure storage
+###################
+
+echo -e "\nConfiguring storage\n"
 sleep 2
 
 
-
-
-
-
-
-
-
-
-# configure disk and partitions
-###############################
-
-# wipe disk
-#echo -e "\nWiping disk\n"
-#sleep 2
-#wipefs --all "$diskName"
-#echo -e "\nDone\n"
-#sleep 2
-
-
-# create partitions
-echo -e "\nCreating partitions\n"
-sleep 2
 echo -e "g\n n\n \n \n +1G\n y\n t\n 1\n n\n \n \n \n y\n t\n \n 23\n w\n" | fdisk "$diskName"
 
 #g\n    create new GPT partition table
@@ -352,13 +319,8 @@ echo -e "g\n n\n \n \n +1G\n y\n t\n 1\n n\n \n \n \n y\n t\n \n 23\n w\n" | fdi
 # write changes and exit
 #w\n    write changes to disk and exit
 
-echo -e "\nDone\n"
-sleep 2
-
 
 # create filesystems
-echo -e "\nCreating filesystems\n"
-sleep 2
 pacman -S --needed --noconfirm btrfs-progs
 if [ "$nvme" == true ]
 then
@@ -367,18 +329,12 @@ then
 fi
 if [ "$nvme" == false ]
 then
-  echo -e "\nFormatting partitions\n"
-  sleep 2
   yes | mkfs.fat -F32 "$diskName"1
   yes | mkfs.btrfs "$diskName"2
 fi
-echo -e "\nDone\n"
-sleep 2
 
 
 # mount and configure filesystems
-echo -e "\nMounting and configuring filesystems\n"
-sleep 2
 if [ "$nvme" == true ]
 then
   mount "$diskName"p2 /mnt
@@ -417,8 +373,6 @@ then
   mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"2 /mnt/var/log
   mount "$diskName"1 /mnt/boot
 fi
-echo -e "\nDone\n"
-sleep 2
 
 
 
@@ -435,8 +389,6 @@ sleep 2
 echo -e "\nUpdating Clock\n"
 sleep 2
 timedatectl set-ntp true
-echo -e "\nDone\n"
-sleep 2
 
 
 
@@ -453,8 +405,6 @@ sleep 2
 echo -e "\nInstalling linux packages\n"
 sleep 2
 pacstrap /mnt base linux linux-firmware
-echo -e "\nDone\n"
-sleep 2
 
 
 
@@ -471,8 +421,6 @@ sleep 2
 echo -e "\nGenerating fstab file\n"
 sleep 2
 genfstab -U /mnt >> /mnt/etc/fstab
-echo -e "\nDone\n"
-sleep 2
 
 
 
