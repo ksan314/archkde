@@ -116,6 +116,23 @@ echo -e "\nUsername set to \"$userName\"\n"
 sleep 3
 
 
+# get root partition
+echo -e "\nGetting root partition path\n"
+sleep 2
+rootPartition=$(fdisk -l | grep -i "linux root" | awk '{print $1}')
+echo -e "\nRoot partition path set to \"$rootPartition\"\n"
+sleep 3
+
+
+# get swap size
+echo -e "\nGetting swap file size\n"
+sleep 2
+ramSize=$(free -k | grep -i mem | awk '{print $2}')
+swapSize=$(echo -e ""$ramSize" * 1" | bc)
+echo -e "\nSwap size is set to \""$swapSize" kB\"\n"
+sleep 3
+
+
 # get custom config
 echo -e "\nDetermining if script should set the repo owner's custom configurations\n"
 sleep 2
@@ -130,15 +147,6 @@ else
     echo -e "\nScript WILL NOT set the repo owner's custom configurations\n"
     sleep 3
 fi
-
-
-# get swap size
-echo -e "\nGetting swap file size\n"
-sleep 2
-ramSize=$(free -k | grep -i mem | awk '{print $2}')
-swapSize=$(echo -e ""$ramSize" * 1" | bc)
-echo -e "\nSwap size is set to \""$swapSize" kB\"\n"
-sleep 3
 
 
 # done automatically getting system information
@@ -191,7 +199,7 @@ sleep 2
 btrfs subvolume create /@swapfile
 mkdir /swapfile
 chattr +C /swapfile
-mount -o noatime,space_cache=v2,subvol=@swapfile "@diskName"p2 /mnt/swapfile
+mount -o noatime,space_cache=v2,subvol=@swapfile "$rootPartition" /swapfile
 dd if=/dev/zero of=/swapfile bs=1024 count="$swapSize" status=progress
 # the above line sets the base size to 1 kB and creates a file with a size equal to bs multiplied by count in bytes
 chmod 0600 /swapfile
