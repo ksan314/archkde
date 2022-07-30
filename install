@@ -481,19 +481,19 @@ sleep 2
 
 
 # copy the confidentials file to destination system's root partition so that chroot script can access the file from inside of chroot
-cp ./confidentials /mnt/root/
+cp ./confidentials /mnt/
 
 
 # copy the chroot script to destination system's root partition
-cp ./chroot /mnt/root/
+cp ./chroot /mnt/
 
 
 # change file permission of chroot script to make it executable
-chmod +x /mnt/root/chroot
+chmod +x /mnt/chroot
 
 
 # change root into the new environment and run chroot script
-arch-chroot /mnt /root/chroot
+arch-chroot /mnt /chroot
 
 
 
@@ -525,7 +525,7 @@ sleep 2
 # remove files that are now unnecessary
 echo -e "\nDeleting user input\n"
 sleep 2
-rm /mnt/root/{confidentials,chroot}
+rm /mnt/{confidentials,chroot}
 echo -e "\nDone\n"
 sleep 2
 
