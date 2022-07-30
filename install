@@ -186,7 +186,7 @@ sleep 3
 
 echo -e "\nInstalling packages needed for installation\n"
 sleep 2
-pacman -S --needed --noconfirm archlinux-keyring hwinfo lshw
+pacman -S --needed archlinux-keyring btrfs-progs hwinfo lshw
 
 
 
@@ -321,7 +321,6 @@ echo -e "g\n n\n \n \n +1G\n y\n t\n 1\n n\n \n \n \n y\n t\n \n 23\n w\n" | fdi
 
 
 # create filesystems
-pacman -S --needed --noconfirm btrfs-progs
 if [ "$nvme" == true ]
 then
   yes | mkfs.fat -F32 "$diskName"p1
