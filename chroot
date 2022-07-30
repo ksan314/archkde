@@ -221,7 +221,6 @@ if [ -z "$cpuThreads" ]
     then
         echo -e "\nEnabling and speeding up package builds\n"
         sleep 2
-        pacman -S --needed --noconfirm base-devel git
         sed -i "s/#MAKEFLAGS=\"-j[0-9]*\"/MAKEFLAGS=\"-j"$cpuThreads"\"/g" /etc/makepkg.conf
         echo -e "\nDone\n"
         sleep 2
