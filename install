@@ -181,18 +181,28 @@ sleep 5
 
 
 
+# install packages needed for installation
+##########################################
+
+echo -e "\nInstalling packages needed for installation
+sleep 2
+pacman -S --needed archlinux-keyring hwinfo lshw
+echo -e "\nDone\n"
+sleep 2
+
+
+
+
+
+
+
+
+
+
 # automatically get system information
 ######################################
 
 echo -e "\nAutomatically getting system information\n"
-sleep 2
-
-
-# install packages needed to get system information
-echo -e "\nInstalling packages needed to get system information\n"
-sleep 2
-pacman -S --needed --noconfirm hwinfo lshw
-echo -e "\nDone\n"
 sleep 2
 
 
