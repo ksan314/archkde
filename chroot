@@ -56,8 +56,7 @@ ln -sf /usr/share/zoneinfo/"$timeZone" /etc/localtime
 hwclock --systohc
 sed -i 's/#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
 locale-gen
-# for things like this, somehow check to see if the file exits, and modify it only if it doesnt
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 echo -e "\nDone\n"
 sleep 2
 
@@ -65,7 +64,7 @@ sleep 2
 # set the hostname
 echo -e "\nSetting hostname\n"
 sleep 2
-echo -e "$hostName" > /etc/hostname
+echo -e "$hostName" >> /etc/hostname
 echo -e "\nDone\n"
 sleep 2
 
@@ -73,7 +72,9 @@ sleep 2
 # configure the network
 echo -e "\nConfiguring Network\n"
 sleep 2
-echo -e "127.0.0.1   localhost\n::1         localhost\n127.0.1.1   $hostName" >> /etc/hosts
+echo -e "127.0.0.1   localhost" >> /etc/hosts
+echo -e "::1         localhost" >> /etc/hosts
+echo -e "127.0.1.1   $hostName" >> /etc/hosts
 echo -e "\nDone\n"
 sleep 2
 
@@ -194,7 +195,7 @@ then
 fi
 if [ "$graphicsVendor" == nvidia ]
 then
-  pacman -S --needed --noconfirm nvidia nvidia-utils lib32-nvidia-utils
+  pacman -S --needed --noconfirm nvidia nvidia-settings nvidia-utils lib32-nvidia-utils
 fi
 echo -e "\nDone\n"
 sleep 2
