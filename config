@@ -89,7 +89,7 @@ reflectorCode=$(echo -e "$reflectorCountry" | grep -o '[A-Z][A-Z]')
 
 # user input ended
 echo -e "\nNo more user input needed\n"
-sleep 5
+sleep 3
 
 
 
@@ -109,11 +109,7 @@ sleep 2
 
 
 # get username
-echo -e "\nGetting username\n"
-sleep 2
 userName=$(users | awk '{print $1}')
-echo -e "\nUsername set to \"$userName\"\n"
-sleep 3
 
 
 # get root partition
@@ -127,38 +123,24 @@ sleep 3
 echo -e "\nGettings root partition UUID\n"
 sleep 2
 rootPartitionUUID=$(blkid "$rootPartition" | awk '{print $2}' | tr -d \")
+echo -e "\nRoot partition "$rootPartitionUUID"\n"
 echo -e "\nDone\n"
-sleep 2
-
-
-# get swap size
-echo -e "\nGetting swap file size\n"
-sleep 2
-ramSize=$(free -k | grep -i mem | awk '{print $2}')
-swapSize=$(echo -e ""$ramSize" * 1" | bc)
-echo -e "\nSwap size is set to \""$swapSize" kB\"\n"
 sleep 3
 
 
+# get swap size
+ramSize=$(free -k | grep -i mem | awk '{print $2}')
+swapSize=$(echo -e ""$ramSize" * 1" | bc)
+
+
 # get custom config
-echo -e "\nDetermining if script should set the repo owner's custom configurations\n"
-sleep 2
 customConfig=$(ls /home/"$userName" | grep -io personal)
 if [ "$customConfig" == personal ]
 then
     customConfig=true
-    echo -e "\nScript WILL set the repo owner's custom configurations\n"
-    sleep 3
 else
     customConfig=false
-    echo -e "\nScript WILL NOT set the repo owner's custom configurations\n"
-    sleep 3
 fi
-
-
-# done automatically getting system information
-echo -e "\nDone getting system information\n"
-sleep 5
 
 
 
@@ -171,6 +153,10 @@ sleep 5
 
 # configure system
 ##################
+
+echo -e "\nConfiguring system\n"
+sleep 2
+
 
 # configure snapper
 echo -e "\nConfiguring snapper\n"
@@ -222,79 +208,46 @@ sleep 2
 
 
 # set swappiness
-echo -e "\nSetting swappiness\n"
-sleep 2
 echo -e "vm.swappiness=1" > /etc/sysctl.d/99-swappiness.conf
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure reflector
-echo -e "\nConfiguring reflector\n"
-sleep 2
 echo -e "--country $reflectorCode" >> /etc/xdg/reflector/reflector.conf
 systemctl enable reflector.timer
-echo -e "\nDone\n"
-sleep 2
 
 
 # enable fstrim
-echo -e "\nEnabling fstrim\n"
-sleep 2
 systemctl enable fstrim.timer
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure paccache
-echo -e "\nConfiguring paccache\n"
-sleep 2
 systemctl enable paccache.timer
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure GRUB
-echo -e "\nConfiguring Grub\n"
-sleep 2
 sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=3/' /etc/default/grub
 if [ "$dualBoot" == Y ] || [ "$dualBoot" == y ] || [ "$dualBoot" == yes ] || [ "$dualBoot" == YES ] || [ "$dualBoot" == Yes ]
 then
-  pacman -S --needed --noconfirm --asdeps os-prober
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
 fi
 grub-mkconfig -o /boot/grub/grub.cfg
-echo -e "\nDone\n"
-sleep 2
 
 
 # enable bluetooth
-echo -e "\nEnabling Bluetooth\n"
-sleep 2
 systemctl enable bluetooth.service
 sed -i 's/#AutoEnable=false/AutoEnable=false/' /etc/bluetooth/main.conf
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure cups
-echo -e "\nConfiguring cups\n"
-sleep 2
 systemctl enable --now avahi-daemon.service
 sed -i 's/mymachines/mymachines mdns_minimal [NOTFOUND=return]/' /etc/nsswitch.conf
 systemctl enable cups.socket
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure plocate
-echo -e "\nConfiguring plocate\n"
-sleep 2
 systemctl enable plocate-updatedb.timer
 echo -e "\n#plocate" >> /home/"$userName"/.bashrc
 echo -e "alias locate='plocate'" >> /home/"$userName"/.bashrc
-echo -e "\nDone\n"
-sleep 2
 
 
 
@@ -312,8 +265,6 @@ if [ "$customConfig" == true ]
 then
 
 # configure bash
-echo -e "\nConfiguring bash\n"
-sleep 2
 #
 echo -e "\n# colored bash prompt" >> /home/"$userName"/.bashrc
 echo 'export PS1="\[\e[34m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[34m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \[\e[31m\]\W\[\e[m\]\[\e[34m\]]\[\e[m\]\[\e[31m\]\\$\[\e[m\] "' >> /home/"$userName"/.bashrc
@@ -342,97 +293,54 @@ echo -e "shopt -s checkwinsize" >> /home/"$userName"/.bashrc
 echo -e "#clears screen after logging out" >> /home/"$userName"/.bash_logout
 echo -e "clear" >> /home/"$userName"/.bash_logout
 echo -e "reset" >> /home/"$userName"/.bash_logout
-#
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure pacman
-echo -e "\nConfiguring pacman\n"
-sleep 2
 sed -i 's/#Color/Color\nILoveCandy/' /etc/pacman.conf
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure paru
-echo -e "\nConfiguring paru\n"
-sleep 2
 sed -i 's/#BottomUp/BottomUp/' /etc/paru.conf
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure pinfo
-echo -e "\nConfiguring pinfo\n"
-sleep 2
 sed -i 's/COL_MENU           = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_MENU           = COLOR_GREEN  ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
 sed -i 's/COL_NOTE           = COLOR_GREEN  ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_NOTE           = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
 sed -i 's/COL_TOPLINE        = COLOR_YELLOW ,  COLOR_BLUE   ,  BOLD   ,  NO_BLINK/COL_TOPLINE        = COLOR_BLACK  ,  COLOR_GREEN  ,  BOLD   ,  NO_BLINK/' /etc/pinforc
 sed -i 's/COL_BOTTOMLINE     = COLOR_YELLOW ,  COLOR_BLUE   ,  BOLD   ,  NO_BLINK/COL_BOTTOMLINE     = COLOR_BLACK  ,  COLOR_GREEN  ,  BOLD   ,  NO_BLINK/' /etc/pinforc
 sed -i 's/COL_URL            = COLOR_MAGENTA,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_URL            = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure bat
-echo -e "\nConfiguring bat\n"
-sleep 2
 su -c "bat --generate-config-file" "$userName"
 echo -e "--theme=\"ansi\"" >> /home/"$userName"/.config/bat/config
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure jackett
-echo -e "\nConfiguring jackett\n"
-sleep 2
 systemctl enable jackett
-echo -e "\nDone\n"
-sleep 2
 
 
 # disable power saving mode for sound card
-#echo -e "\nDisabling power saving mode for sound card\n"
-#sleep 2
 #sed -i 's/load-module module-suspend-on-idle/#load-module module-suspend-on-idle/' /etc/pulse/default.pa
-#echo -e "\nDone\n"
-#sleep 2
 
 
 # configure RKHunter (rootkit hunter)
-echo -e "\nConfiguring RKHunter\n"
-sleep 2
 rkhunter --propupd
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure clamav (antivirus)
-echo -e "\nConfiguring ClamAV\n"
-sleep 2
 freshclam
 systemctl enable clamav-freshclam
 systemctl enable clamav-daemon
-# echo -e "$rootPassword" | su -c "sudo -Su clamav /usr/bin/fangfrisch --conf /etc/fangfrisch/fangfrisch.conf initdb" "$userName"
-# su -c "sudo -Su clamav /usr/bin/fangfrisch --conf /etc/fangfrisch/fangfrisch.conf initdb" "$userName"
 sudo -Su clamav /usr/bin/fangfrisch --conf /etc/fangfrisch/fangfrisch.conf initdb
 systemctl enable fangfrisch.timer
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure virtual machine manager (libvirt)
-echo -e "\nConfiguring virtual machines\n"
-sleep 2
 systemctl enable libvirtd.service
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure dolphin
-echo -e "\nCongfiguring Dolphin\n"
-sleep 2
 su -c "mkdir -p /home/"$userName"/.local/share/kxmlgui5/dolphin" "$userName"
 su -c "cp /home/"$userName"/personal/plasma/dolphinui.rc /home/"$userName"/.local/share/kxmlgui5/dolphin" "$userName"
 su -c "touch /home/"$userName"/.config/dolphinrc" "$userName"
@@ -442,15 +350,9 @@ su -c "touch /home/"$userName"/.local/share/dolphin/view_properties/global/.dire
 echo -e "[Settings]\nHiddenFilesShown=true" >> /home/"$userName"/.local/share/dolphin/view_properties/global/.directory
 su -c "touch /home/"$userName"/.config/ktrashrc" "$userName"
 echo -e "[/home/$userName/.local/share/Trash]\nDays=14\nLimitReachedAction=0\nPercent=10\nUseSizeLimit=true\nUseTimeLimit=true" >> /home/"$userName"/.config/ktrashrc
-# hide basic data partition
-echo -e "\nDone\n"
-sleep 2
 
 
 # configure kde plasma
-echo -e "\nConfiguring Plasma\n"
-sleep 2
-#
 # config files
 cp /home/"$userName"/personal/plasma/wallpaper.jpg /usr/share/wallpapers
 su -c "cp /home/"$userName"/personal/plasma/mimeapps.list /home/"$userName"/.config" "$userName"
@@ -488,28 +390,17 @@ echo -e "only basic indexing=true" >> /home/"$userName"/.config/baloofilerc
 #su -c "mkdir -p /home/"$userName"/.config/autostart" "$userName"
 #su -c "cp /usr/share/applications/guake.desktop /home/"$userName"/.config/autostart" "$userName"
 #chown -R "$userName":users /home/"$userName"/.config/autostart/guake.desktop
-#
-echo -e "\nDone\n"
-sleep 2
 
 
 # save config files to desktop
-echo -e "\nSaving config files to desktop\n"
-sleep 2
 su -c "cp /home/"$userName"/personal/plasma/guake.config /home/"$userName"/Desktop" "$userName"
 su -c "cp /home/"$userName"/personal/plasma/qbittorrent.txt /home/"$userName"/Desktop" "$userName"
 su -c "cp /home/"$userName"/personal/plasma/system_monitor.page /home/"$userName"/Desktop" "$userName"
-echo -e "\nDone\n"
-sleep 2
 
 
 # remove custom config files
-echo -e "\nRemoving repo owner's custom config files\n"
-sleep 2
 rm -rf /home/"$userName"/personal
 rm -rf /home/"$userName"/Desktop/packages.txt
-echo -e "\nDone\n"
-sleep 2
 
 fi
 
@@ -523,14 +414,10 @@ fi
 
 
 # remove files, and reboot
-############################
+##########################
 
-# remove files
-echo -e "\nRemoving no longer needed files\n"
-sleep 2
+# remove no longer needed files
 rm -rf /home/"$userName"/archbtrfs
-echo -e "\nDone\n"
-sleep 2
 
 
 # reboot
