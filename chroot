@@ -56,6 +56,7 @@ ln -sf /usr/share/zoneinfo/"$timeZone" /etc/localtime
 hwclock --systohc
 sed -i 's/#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
 locale-gen
+# for things like this, somehow check to see if the file exits, and modify it only if it doesnt
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo -e "\nDone\n"
 sleep 2
