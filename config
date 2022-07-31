@@ -98,10 +98,10 @@ cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
 # see "system backup" page on the arch wiki
 
 
-# configure zram-generator
-# get path to example config file
-#zramGeneratorExample=$(find / -name zram-generator.conf.example 2>/dev/null)
-#cp "$zramGeneratorExample" /etc/systemd/zram-generator.conf
+# configure zram
+systemctl enable zramd
+zramd start -f 20
+
 
 
 # enable fstrim
