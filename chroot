@@ -45,10 +45,6 @@ read -r userName userPassword rootPassword hostName timeZone diskName customConf
 # configure pacman and install all needed packages
 ##################################################
 
-echo -e "\nInstalling packages\n"
-sleep 2
-
-
 # configure pacman
 sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
 pacman -Syu
