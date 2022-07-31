@@ -169,7 +169,7 @@ done
 
 
 # user input ended
-echo -e "\nNo more user input needed\n"
+printf "\e[1;32m\nNo more user input needed\n\e[0m"
 sleep 3
 
 
@@ -260,7 +260,7 @@ echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $cu
 # verify the system is ready for install
 ########################################
 
-echo -e "\nVerifying the system is ready for arch installation\n"
+printf "\e[1;32m\nVerifying the system is ready for arch installation\n\e[0m"
 sleep 2
 
 
@@ -283,7 +283,7 @@ ping -c 5 archlinux.org
 # configure storage
 ###################
 
-echo -e "\nConfiguring storage\n"
+printf "\e[1;32m\nConfiguring storage\n\e[0m"
 sleep 2
 
 
@@ -379,7 +379,7 @@ fi
 # update the system clock
 #########################
 
-echo -e "\nUpdating Clock\n"
+printf "\e[1;32m\nUpdating Clock\n\e[0m"
 sleep 2
 timedatectl set-ntp true
 
@@ -395,7 +395,7 @@ timedatectl set-ntp true
 # install linux packages
 ########################
 
-echo -e "\nInstalling linux packages\n"
+printf "\e[1;32m\nInstalling linux packages\n\e[0m"
 sleep 2
 pacstrap /mnt base linux linux-firmware
 
@@ -411,7 +411,7 @@ pacstrap /mnt base linux linux-firmware
 # generate an fstab file
 ########################
 
-echo -e "\nGenerating fstab file\n"
+printf "\n\e[1;32mGenerating fstab file\n\e[0m"
 sleep 2
 genfstab -U /mnt >> /mnt/etc/fstab
 
@@ -427,7 +427,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # prepeare to change root into the new system and run chroot script
 ###################################################################
 
-echo -e "\nChrooting into new environment and running chroot script\n"
+printf "\e[1;32m\nChrooting into new environment and running chroot script\n\e[0m"
 sleep 2
 
 
@@ -458,7 +458,7 @@ arch-chroot /mnt /chroot
 # finish installation
 #####################
 
-echo -e "\nFinishing installation\n"
+printf "\e[1,32m\nFinishing installation\n\e[0m"
 sleep 2
 
 
@@ -471,4 +471,4 @@ umount -R /mnt
 
 
 # reboot the system
-echo -e "\nInstallation Complete. Enter \"reboot\" to reboot the system\n"
+printf "\e[1;32m\nInstallation Complete. Enter \"reboot\" to reboot the system\n\e[0m"
