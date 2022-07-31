@@ -48,7 +48,7 @@ rootPartitionUUID=$(blkid "$rootPartition" | awk '{print $2}' | tr -d \")
 # output is of the form: UUID=*******
 
 
-# get swap size in MB
+# get swap size in MB, equal to 25% of ram, and convert to integer
 ramSize=$(free -m | grep -i mem | awk '{print $2}')
 swapSize=$(echo -e ""$ramSize" * 0.25" | bc)
 swapsizeInteger=${swapSize%.*}
@@ -83,6 +83,7 @@ sleep 2
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
+#snapper -c home create-config /home
 btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
