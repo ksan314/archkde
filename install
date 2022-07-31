@@ -184,9 +184,7 @@ sleep 3
 # install packages needed for installation
 ##########################################
 
-echo -e "\nInstalling packages needed for installation\n"
-sleep 2
-pacman -S --needed archlinux-keyring btrfs-progs hwinfo lshw
+pacman -S --needed --noconfirm archlinux-keyring btrfs-progs hwinfo lshw
 
 
 
