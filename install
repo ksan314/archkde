@@ -114,6 +114,30 @@ do
 done
 
 
+# get reflector country
+mapfile -t reflectorCountries < <(reflector --list-countries)
+PS3="Enter the number for the country you want to download packages from: "
+select reflectorCountry in "${reflectorCountries[@]}"
+do
+    if (( REPLY > 0 && REPLY <= "${#reflectorCountries[@]}" ))
+    then
+        read -rp $'\n'"Are you sure you want to select the country \"$reflectorCountry\"? [Y/n] " reflectorConfirm
+        reflectorConfirm=${reflectorConfirm:-Y}
+            case $reflectorConfirm in
+                [yY][eE][sS]|[yY]) break;;
+                [nN][oO]|[nN]);;
+                *);;
+            esac
+            REPLY=
+    else
+        echo -e "\nInvalid option. Try another one\n"
+        sleep 2
+        REPLY=
+    fi
+done
+reflectorCode=$(echo -e "$reflectorCountry" | grep -o '[A-Z][A-Z]')
+
+
 # get disk name
 mapfile -t availableDisks < <(lsblk -o PATH,SIZE,TYPE,MODEL,PTTYPE | grep -i disk)
 PS3="Enter the number for the disk you want to use: "
@@ -279,7 +303,7 @@ fi
 # save inputs that will be needed for chroot script in a file that will be sourced later
 ########################################################################################
 
-echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $diskShred $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
+echo -e "$userName $userPassword $rootPassword $hostName $timeZone $reflectorCode $diskName $diskShred $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
 
 
 
