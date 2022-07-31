@@ -200,10 +200,6 @@ pacman -S --needed archlinux-keyring btrfs-progs hwinfo lshw
 # automatically get system information
 ######################################
 
-echo -e "\nAutomatically getting system information\n"
-sleep 2
-
-
 # get arch url
 archURL=$(grep -i url /root/archbtrfs/.git/config | awk '{print $3}')
 
