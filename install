@@ -1,5 +1,5 @@
 #!/bin/bash
-# this script gets user input, automatically gets system information, checks to see if system is ready for install, creates a 1GB FAT32 efi partition and an ext4 root partition that takes up the rest of the disk, installs linux, chroots into system and runs chroot script, then reboots into KDE Plasma
+# this script gets user input, automatically gets system information, checks to see if system is ready for install, creates a 1GB FAT32 efi partition, and an ext4 root partition that takes up the rest of the disk, installs linux, then chroots into system and runs chroot script
 
 
 
@@ -279,7 +279,7 @@ fi
 # save inputs that will be needed for chroot script in a file that will be sourced later
 ########################################################################################
 
-echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
+echo -e "$userName $userPassword $rootPassword $hostName $timeZone $diskName $diskShred $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
 
 
 
