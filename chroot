@@ -98,7 +98,7 @@ sleep 2
 
 # grub
 pacman -S --needed --asdeps efibootmgr grub-btrfs os-prober
-#the following sets the packages as dependencies for grub
+# set as dependencies
 package=grub
 dependsOn=("efibootmgr" "grub-btrfs" "os-prober")
 package=$(ls /var/lib/pacman/local | grep -i "$package")
@@ -114,7 +114,7 @@ done
 
 # printing
 pacman -S --needed --asdeps avahi cups cups-pdf nss-mdns system-config-printer usbutils
-#the following sets the packages as dependencies for print-manager
+# set as dependencies
 package=print-manager
 dependsOn=("avahi" "cups" "cups-pdf" "nss-mdns" "system-config-printer" "usbutils")
 package=$(ls /var/lib/pacman/local | grep -i "$package")
