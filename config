@@ -104,28 +104,17 @@ sleep 3
 # automatically get system information
 ######################################
 
-printf "\e[1;32m\nAutomatically getting system information\n\e[0m"
-sleep 2
-
-
 # get username
 userName=$(users | awk '{print $1}')
 
 
 # get root partition
-echo -e "\nGetting root partition path\n"
-sleep 2
 rootPartition=$(fdisk -l | grep -i "linux root" | awk '{print $1}')
-echo -e "\nRoot partition path set to \"$rootPartition\"\n"
-sleep 3
+
 
 # get root partition uuid
-echo -e "\nGettings root partition UUID\n"
-sleep 2
 rootPartitionUUID=$(blkid "$rootPartition" | awk '{print $2}' | tr -d \")
-echo -e "\nRoot partition "$rootPartitionUUID"\n"
-echo -e "\nDone\n"
-sleep 3
+# output is of the form: UUID=*******
 
 
 # get swap size
@@ -159,8 +148,6 @@ sleep 2
 
 
 # configure snapper
-echo -e "\nConfiguring snapper\n"
-sleep 2
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
@@ -171,59 +158,20 @@ chmod 750 /.snapshots
 # still need to edit /etc/snapper/configs/root
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
-echo -e "\nDone\n"
-sleep 2
 
 
 # backup boot partition on kernel update
-echo -e "\nBackup boot partition on kernel update\n"
-sleep 2
 mkdir /etc/pacman.d/hooks
 cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
 # make sure the file is owned by root after copying
 # see "system backup" page on the arch wiki
-echo -e "\nDone\n"
-sleep 2
 
 
-# create a swap file
-echo -e "\nCreating swap file\n"
-sleep 2
-#mount "$rootPartition" /mnt
-#btrfs subvolume create /mnt/@swap
-#umount /mnt
-#mkdir /swap
-#chattr +C /swap
-#mount -o noatime,space_cache=v2,subvol=@swap "$rootPartition" /swap
-#dd if=/dev/zero of=/swap/swapfile bs=1024 count="$swapSize" status=progress
-# the above line sets the base size to 1 kB and creates a file with a size equal to bs multiplied by count in bytes
-#chmod 0600 /swap/swapfile
-#mkswap -U clear /swap/swapfile
-#swapon /swap/swapfile
-#echo -e "\n# swap file" >> /etc/fstab
-#echo -e ""$rootPartitionUUID" /swap btrfs subvol=@swap 0 0" >> /etc/fstab
-#echo -e "/swap/swapfile none swap defaults 0 0" >> /etc/fstab
+# configure zram-generator
+# get path to example config file
+#zramGeneratorExample=$(find / -name zram-generator.conf.example 2>/dev/null)
+#cp "$zramGeneratorExample" /etc/systemd/zram-generator.conf
 
-
-btrfs subvolume create @swap
-mkdir /swap
-chattr +C /swap
-mount -o noatime,space_cache=v2,subvol=@swap "$rootPartition" /swap
-touch /swap/swapfile
-dd if=/dev/zero of=/swap/swapfile bs=1024 count="$swapSize" status=progress
-# the above line sets the base size to 1 kB and creates a file with a size equal to bs multiplied by count in bytes
-chmod 600 /swap/swapfile
-mkswap -U clear /swap/swapfile
-swapon /swap/swapfile
-echo -e "\n# swap file" >> /etc/fstab
-echo -e ""$rootPartitionUUID" /swap btrfs subvol=@swap 0 0" >> /etc/fstab
-echo -e "/swap/swapfile none swap defaults 0 0" >> /etc/fstab
-echo -e "\nDone\n"
-sleep 2
-
-
-# set swappiness
-echo -e "vm.swappiness=1" > /etc/sysctl.d/99-swappiness.conf
 
 
 # configure reflector
