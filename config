@@ -101,7 +101,7 @@ cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
 
 # configure zram
 systemctl enable zramd
-zramd start -f 25 -m "$swapsizeInteger"
+zramd start -f 0.25 -m "$swapsizeInteger"
 
 
 # enable fstrim
