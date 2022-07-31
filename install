@@ -184,7 +184,7 @@ sleep 3
 # install packages needed for installation
 ##########################################
 
-pacman -S --needed --noconfirm archlinux-keyring btrfs-progs hwinfo lshw
+pacman -S --needed --noconfirm archlinux-keyring hwinfo lshw
 
 
 
