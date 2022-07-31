@@ -176,7 +176,7 @@ cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
 
 # configure reflector
 echo -e "--country $reflectorCode" >> /etc/xdg/reflector/reflector.conf
-systemctl enable reflector.timer
+systemctl enable reflector.service
 
 
 # enable fstrim
