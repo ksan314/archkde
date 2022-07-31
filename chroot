@@ -28,7 +28,7 @@ sleep 2
 # import user inputs and system information
 ###########################################
 
-read -r userName userPassword rootPassword hostName timeZone reflectorCode diskName diskShred customConfig archURL nvme processorVendor cpuThreads graphicsVendor < /confidentials
+read -r userName userPassword rootPassword hostName dualBoot timeZone reflectorCode diskName diskShred customConfig archURL nvme processorVendor cpuThreads graphicsVendor < /confidentials
 # needs to be the exact same list of variables as in the install script
 
 
@@ -57,7 +57,7 @@ pacman -S --needed --noconfirm pacman-contrib pacutils
 # install essential packages
 printf "\e[1;32m\nInstalling essential packages\n\e[0m"
 sleep 2
-pacman -S --needed base-devel bat btrfs-progs coreutils efibootmgr exfat-utils findutils git grub grub-btrfs hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g os-prober pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
+pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
 
 
 # install kde plasma
@@ -95,6 +95,22 @@ fi
 # install dependencies
 printf "\e[1;32m\nInstalling dependencies\n\e[0m"
 sleep 2
+
+# grub
+pacman -S --needed --asdeps efibootmgr grub-btrfs os-prober
+#the following sets the packages as dependencies for grub
+package=grub
+dependsOn=("efibootmgr" "grub-btrfs" "os-prober")
+package=$(ls /var/lib/pacman/local | grep -i "$package")
+for n in "${dependsOn[@]}";
+do
+    needed=$(grep -io "$n" /var/lib/pacman/local/"$package"/desc)
+    if [ -z "$needed" ]
+    then
+        sed -i "s/%DEPENDS%/%DEPENDS%\n""$n""/g" /var/lib/pacman/local/"$package"/desc
+    fi
+done
+
 
 # printing
 pacman -S --needed --asdeps avahi cups cups-pdf nss-mdns system-config-printer usbutils
@@ -166,8 +182,12 @@ sed -i 's/MODULES=()/MODULES=(btrfs)/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
 
-# install and configure a bootloader
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+# configure grub
+sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=3/' /etc/default/grub
+if [ "$dualBoot" == Y ] || [ "$dualBoot" == y ] || [ "$dualBoot" == yes ] || [ "$dualBoot" == YES ] || [ "$dualBoot" == Yes ]
+then
+  sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+fi
 grub-mkconfig -o /boot/grub/grub.cfg
 
 
