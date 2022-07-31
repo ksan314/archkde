@@ -48,9 +48,10 @@ rootPartitionUUID=$(blkid "$rootPartition" | awk '{print $2}' | tr -d \")
 # output is of the form: UUID=*******
 
 
-# get swap size
-ramSize=$(free -k | grep -i mem | awk '{print $2}')
-swapSize=$(echo -e ""$ramSize" * 1" | bc)
+# get swap size in MB
+ramSize=$(free -m | grep -i mem | awk '{print $2}')
+swapSize=$(echo -e ""$ramSize" * 0.25" | bc)
+swapsizeInteger=${swapSize%.*}
 
 
 # get custom config
@@ -100,8 +101,7 @@ cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
 
 # configure zram
 systemctl enable zramd
-zramd start -f 20
-
+zramd start -f 25 -m "$swapsizeInteger"
 
 
 # enable fstrim
