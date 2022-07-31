@@ -104,7 +104,7 @@ sleep 3
 # automatically get system information
 ######################################
 
-echo -e "\nAutomatically getting system information\n"
+printf "\e[1;32m\nAutomatically getting system information\n\e[0m"
 sleep 2
 
 
@@ -154,7 +154,7 @@ fi
 # configure system
 ##################
 
-echo -e "\nConfiguring system\n"
+printf "\e[1;32m\nConfiguring system\n\e[0m"
 sleep 2
 
 
@@ -436,4 +436,4 @@ rm -rf /home/"$userName"/archbtrfs
 
 
 # reboot
-echo -e "\nConfig complete. Enter \"reboot\" to reboot the system\n"
+printf "\e[1;32m\nConfig complete. Enter \"reboot\" to reboot the system\n\e[0m"
