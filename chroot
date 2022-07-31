@@ -13,9 +13,7 @@
 # chroot confirmation
 #####################
 
-echo -e "\nChrooted into new environment\n"
-sleep 2
-echo -e "\nRunning chroot script\n"
+printf "\e[1;32m\nChrooted into new environment and running chroot script\n\e[0m"
 sleep 2
 
 
@@ -52,19 +50,19 @@ pacman -S --needed --noconfirm pacman-contrib pacutils
 
 
 # install essential packages
-echo -e "\nInstalling essential packages\n"
+printf "\e[1;32m\nInstalling essential packages\n\e[0m"
 sleep 2
 pacman -S --needed base-devel bat btrfs-progs coreutils efibootmgr exfat-utils findutils git grub grub-btrfs hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g os-prober pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
 
 
 # install kde plasma
-echo -e "\nInstalling KDE Plasma\n"
+printf "\e[1;32m\nInstalling KDE Plasma\n\e[0m"
 sleep 2
 pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
 
 
 # install printing packages
-echo -e "\nInstalling printing packages\n"
+printf "\e[1;32m\nInstalling printing packages\n\e[0m"
 sleep 2
 pacman -S --needed print-manager
 
@@ -72,7 +70,7 @@ pacman -S --needed print-manager
 # install graphics drivers
 if [ "$graphicsVendor" != null ]
 then
-    echo -e "\nInstalling graphics drivers\n"
+    printf "\e[1;32m\nInstalling graphics drivers\n\e[0m"
     sleep 2
 fi
 if [ "$graphicsVendor" == amd ]
@@ -90,7 +88,7 @@ fi
 
 
 # install dependencies
-echo -e "\nInstalling dependencies\n"
+printf "\e[1;32m\nInstalling dependencies\n\e[0m"
 sleep 2
 
 # printing
@@ -120,7 +118,7 @@ done
 # configure the system
 ######################
 
-echo -e "\nConfiguring the system\n"
+printf "\e[1;32m\nConfiguring the system\n\e[0m"
 sleep 2
 
 
@@ -186,7 +184,7 @@ fi
 # enable network manager and ssdm to boot into KDE Plasma
 #########################################################
 
-echo -e "\nEnabling KDE Plasma\n"
+printf "\e[1;32m\nEnabling KDE Plasma\n\e[0m"
 sleep 2
 
 
@@ -209,7 +207,7 @@ systemctl enable sddm
 # import files
 ##############
 
-echo -e "\nImporting files\n"
+printf "\e[1;32m\nImporting files\n\e[0m"
 sleep 2
 
 
@@ -239,8 +237,7 @@ chown -R "$userName":users /home/"$userName"/archbtrfs
 
 # exit the chroot environment (does this automatically when script ends)
 ########################################################################
-
-echo -e "\nExiting the chroot environment\n"
+printf "\e[1;32m\nExiting the chroot environment\n\e[0m"
 sleep 2
 
 
