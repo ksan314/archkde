@@ -63,30 +63,6 @@ fi
 done
 
 
-# get reflector country
-mapfile -t reflectorCountries < <(reflector --list-countries)
-PS3="Enter the number for the country you want to download packages from: "
-select reflectorCountry in "${reflectorCountries[@]}"
-do
-    if (( REPLY > 0 && REPLY <= "${#reflectorCountries[@]}" ))
-    then
-        read -rp $'\n'"Are you sure you want to select the country \"$reflectorCountry\"? [Y/n] " reflectorConfirm
-        reflectorConfirm=${reflectorConfirm:-Y}
-            case $reflectorConfirm in
-                [yY][eE][sS]|[yY]) break;;
-                [nN][oO]|[nN]);;
-                *);;
-            esac
-            REPLY=
-    else
-        echo -e "\nInvalid option. Try another one\n"
-        sleep 2
-        REPLY=
-    fi
-done
-reflectorCode=$(echo -e "$reflectorCountry" | grep -o '[A-Z][A-Z]')
-
-
 # user input ended
 echo -e "\nNo more user input needed\n"
 sleep 3
@@ -171,12 +147,6 @@ cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
 # get path to example config file
 #zramGeneratorExample=$(find / -name zram-generator.conf.example 2>/dev/null)
 #cp "$zramGeneratorExample" /etc/systemd/zram-generator.conf
-
-
-
-# configure reflector
-echo -e "--country $reflectorCode" >> /etc/xdg/reflector/reflector.conf
-systemctl enable reflector.service
 
 
 # enable fstrim
