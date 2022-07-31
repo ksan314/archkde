@@ -138,6 +138,36 @@ done
 diskName=$(lsblk -o PATH,SIZE,TYPE,MODEL,PTTYPE | grep -i "$selectedDisk" | awk '{print $1}')
 
 
+# get disk shred
+while true
+do
+read -rp $'\n'"Would you like to erase all data on the disk "$diskName"? [y/N] " diskShred
+    diskShred=${diskShred:-N}
+    if [ "$diskShred" == Y ] || [ "$diskShred" == y ] || [ "$diskShred" == yes ] || [ "$diskShred" == YES ] || [ "$diskShred" == Yes ]
+    then
+        diskShred=true
+        read -rp $'\n'"Are you sure you DO want to erase all data on the disk "$diskName"? [Y/n] " diskshredConfirm
+        diskshredConfirm=${diskshredConfirm:-Y}
+        case $diskshredConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+    else
+        diskShred=false
+        read -rp $'\n'"Are you sure you DO NOT want to erase all data on the disk "$diskName"? [Y/n] " diskshredConfirm
+        diskshredConfirm=${diskshredConfirm:-Y}
+        case $diskshredConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+    fi
+done
+
+
 # get custom config
 while true
 do
@@ -146,7 +176,7 @@ read -rp $'\n'"Would you like to include the repo owner's custom configurations?
     if [ "$customConfig" == Y ] || [ "$customConfig" == y ] || [ "$customConfig" == yes ] || [ "$customConfig" == YES ] || [ "$customConfig" == Yes ]
     then
         customConfig=true
-        read -rp $'\n'"Are you sure you want to include the repo owner's custom configurations? [Y/n] " customconfigConfirm
+        read -rp $'\n'"Are you sure you DO want to include the repo owner's custom configurations? [Y/n] " customconfigConfirm
         customconfigConfirm=${customconfigConfirm:-Y}
         case $customconfigConfirm in
             [yY][eE][sS]|[yY]) break;;
@@ -156,7 +186,7 @@ read -rp $'\n'"Would you like to include the repo owner's custom configurations?
         REPLY=
     else
         customConfig=false
-        read -rp $'\n'"Are you sure you do NOT want to use the repo owner's custom configurations? [Y/n] " customconfigConfirm
+        read -rp $'\n'"Are you sure you DO NOT want to use the repo owner's custom configurations? [Y/n] " customconfigConfirm
         customconfigConfirm=${customconfigConfirm:-Y}
         case $customconfigConfirm in
             [yY][eE][sS]|[yY]) break;;
@@ -183,6 +213,9 @@ sleep 3
 
 # install packages needed for installation
 ##########################################
+
+printf "\e[1;32m\nInstalling packages needed for installation\n\e[0m"
+sleep 2
 
 pacman -S --needed --noconfirm archlinux-keyring hwinfo lshw
 
@@ -287,6 +320,14 @@ printf "\e[1;32m\nConfiguring storage\n\e[0m"
 sleep 2
 
 
+# shred disk
+if [ "$diskShred" == true ]
+then
+    shred -v --random-source=/dev/zero -n1 "$diskName"
+fi
+
+
+# create partitions
 echo -e "g\n n\n \n \n +1G\n y\n t\n 1\n n\n \n \n \n y\n t\n \n 23\n w\n" | fdisk "$diskName"
 
 #g\n    create new GPT partition table
