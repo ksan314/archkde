@@ -189,15 +189,30 @@ sleep 2
 # create a swap file
 echo -e "\nCreating swap file\n"
 sleep 2
-mount "$rootPartition" /mnt
-btrfs subvolume create /mnt/@swap
-umount /mnt
+#mount "$rootPartition" /mnt
+#btrfs subvolume create /mnt/@swap
+#umount /mnt
+#mkdir /swap
+#chattr +C /swap
+#mount -o noatime,space_cache=v2,subvol=@swap "$rootPartition" /swap
+#dd if=/dev/zero of=/swap/swapfile bs=1024 count="$swapSize" status=progress
+# the above line sets the base size to 1 kB and creates a file with a size equal to bs multiplied by count in bytes
+#chmod 0600 /swap/swapfile
+#mkswap -U clear /swap/swapfile
+#swapon /swap/swapfile
+#echo -e "\n# swap file" >> /etc/fstab
+#echo -e ""$rootPartitionUUID" /swap btrfs subvol=@swap 0 0" >> /etc/fstab
+#echo -e "/swap/swapfile none swap defaults 0 0" >> /etc/fstab
+
+
+btrfs subvolume create @swap
 mkdir /swap
 chattr +C /swap
-mount -o noatime,space_cache=v2,subvol=@swap "$rootPartition" /swap
+mount -0 noatime,space_cache=v2,subvol=@swap "$rootPartition" /swap
+# maybe run touch /swap/swapfile
 dd if=/dev/zero of=/swap/swapfile bs=1024 count="$swapSize" status=progress
 # the above line sets the base size to 1 kB and creates a file with a size equal to bs multiplied by count in bytes
-chmod 0600 /swap/swapfile
+chmod 600 /swap/swapfile
 mkswap -U clear /swap/swapfile
 swapon /swap/swapfile
 echo -e "\n# swap file" >> /etc/fstab
