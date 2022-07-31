@@ -32,51 +32,6 @@ fi
 
 
 
-# get user input
-################
-
-# should the system check for other operating systems?
-while true
-do
-read -rp $'\n'"Would you like the bootloader to check for other operating systems? [Y/n] " dualBoot
-    dualBoot=${dualBoot:-Y}
-if [ "$dualBoot" == Y ] || [ "$dualBoot" == y ] || [ "$dualBoot" == yes ] || [ "$dualBoot" == YES ] || [ "$dualBoot" == Yes ]
-then
-    read -rp $'\n'"Are you sure you want the bootloader to check for other operating systems? [Y/n] " dualbootConfirm
-        dualbootConfirm=${dualbootConfirm:-Y}
-        case $dualbootConfirm in
-            [yY][eE][sS]|[yY]) break;;
-            [nN][oO]|[nN]);;
-            *);;
-        esac
-        REPLY=
-else
-   read -rp $'\n'"Are you sure you DO NOT want the bootloader to check for other operating systems? [Y/n] " dualbootConfirm
-        dualbootConfirm=${dualbootConfirm:-Y}
-        case $dualbootConfirm in
-            [yY][eE][sS]|[yY]) break;;
-            [nN][oO]|[nN]);;
-            *);;
-        esac
-        REPLY=
-fi
-done
-
-
-# user input ended
-echo -e "\nNo more user input needed\n"
-sleep 3
-
-
-
-
-
-
-
-
-
-
-
 # automatically get system information
 ######################################
 
@@ -155,15 +110,6 @@ systemctl enable fstrim.timer
 
 # configure paccache
 systemctl enable paccache.timer
-
-
-# configure GRUB
-sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=3/' /etc/default/grub
-if [ "$dualBoot" == Y ] || [ "$dualBoot" == y ] || [ "$dualBoot" == yes ] || [ "$dualBoot" == YES ] || [ "$dualBoot" == Yes ]
-then
-  sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
-fi
-grub-mkconfig -o /boot/grub/grub.cfg
 
 
 # enable bluetooth
