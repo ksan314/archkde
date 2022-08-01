@@ -117,15 +117,15 @@ sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 chmod a+rx /.snapshots
 chown :wheel /.snapshots
 # may need to change to .snapshots for previous 2 lines
-# create a manual snapshot before running the rest of config.sh
-snapper -c root create -d "***Before config.sh***"
-# regenerate grub.cfg so manual snapshot will be available in grub menu (dont think this needs to be done due to grub-btrfs.path systemd service)
-# grub-mkconfig -o /boot/grub/grub.cfg
 # enable systemd services
 systemctl enable --now grub-btrfs.path
 # starting will regenerate grub.cfg and add snapshots to grub
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
+# create a snapshot before running the rest of config.sh
+snapper -c root create -d "***Before config.sh***"
+# regenerate grub.cfg so manual snapshot will be available in grub menu (dont think this needs to be done due to grub-btrfs.path systemd service)
+# grub-mkconfig -o /boot/grub/grub.cfg
 
 
 # backup boot partition on pacman transactions
@@ -338,7 +338,8 @@ fi
 rm -rf /home/"$userName"/arch
 
 
-# manually create a snapshot???
+# create a snapshot
+snapper -c root create -d "***After config.sh***"
 
 
 # reboot
