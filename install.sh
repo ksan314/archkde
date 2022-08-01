@@ -13,6 +13,26 @@
 # get user input
 ################
 
+# get hostname
+while true
+do
+read -rp $'\n'"Enter a new name for this device: " hostName
+    if [ -z "$hostName" ]
+    then
+        echo -e "\nYou must enter a name for this device\n"
+    else
+        read -rp $'\n'"Are you sure you want to use the name \"$hostName\" for this device? [Y/n] " hostnameConfirm
+        hostnameConfirm=${hostnameConfirm:-Y}
+        case $hostnameConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+    fi
+done
+
+
 # get username
 while true
 do
@@ -67,26 +87,6 @@ read -srp $'\n'"Confirm new root password: " rootPassword2
     else
         rootPassword=$rootPassword1
         break
-    fi
-done
-
-
-# get hostname
-while true
-do
-read -rp $'\n'"Enter new name for this device: " hostName
-    if [ -z "$hostName" ]
-    then
-        echo -e "\nYou must enter a name for this device\n"
-    else
-        read -rp $'\n'"Are you sure you want to use the name \"$hostName\" for this device? [Y/n] " hostnameConfirm
-        hostnameConfirm=${hostnameConfirm:-Y}
-        case $hostnameConfirm in
-            [yY][eE][sS]|[yY]) break;;
-            [nN][oO]|[nN]);;
-            *);;
-        esac
-        REPLY=
     fi
 done
 
@@ -331,7 +331,7 @@ fi
 # save inputs that will be needed for chroot script in a file that will be sourced later
 ########################################################################################
 
-echo -e "$userName $userPassword $rootPassword $hostName $dualBoot $timeZone $reflectorCode $diskName $diskShred $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
+echo -e "$hostName $userName $userPassword $rootPassword $dualBoot $timeZone $reflectorCode $diskName $diskShred $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
 
 
 
