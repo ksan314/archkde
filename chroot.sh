@@ -65,7 +65,7 @@ pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils gi
 # install kde plasma
 printf "\e[1;32m\nInstalling KDE Plasma\n\e[0m"
 sleep 2
-pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
+#pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
 
 
 # install printing packages
@@ -99,7 +99,8 @@ printf "\e[1;32m\nInstalling dependencies\n\e[0m"
 sleep 2
 
 # grub
-pacman -S --needed --asdeps efibootmgr grub-btrfs os-prober
+pacman -S --needed --asdeps efibootmgr os-prober
+# grub-btrfs
 # set as dependencies
 package=grub
 dependsOn=("efibootmgr" "grub-btrfs" "os-prober")
@@ -220,7 +221,7 @@ systemctl enable NetworkManager
 
 
 # enable sddm
-systemctl enable sddm
+#systemctl enable sddm
 
 
 
