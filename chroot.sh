@@ -52,14 +52,13 @@ pacman -S --needed --asdeps --noconfirm pacman-contrib pacutils
 # install essential packages
 printf "\e[1;32m\nInstalling essential packages\n\e[0m"
 sleep 2
-pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck sudo texinfo tldr ufw unzip vim zip zoxide
-# snap-pac snapper
+pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
 
 
 # install kde plasma
 printf "\e[1;32m\nInstalling KDE Plasma\n\e[0m"
 sleep 2
-#pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
+pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
 
 
 # install printing packages
@@ -93,8 +92,7 @@ printf "\e[1;32m\nInstalling dependencies\n\e[0m"
 sleep 2
 
 # grub
-pacman -S --needed --asdeps efibootmgr os-prober
-# grub-btrfs
+pacman -S --needed --asdeps efibootmgr grub-btrfs os-prober
 # set as dependencies
 package=grub
 dependsOn=("efibootmgr" "grub-btrfs" "os-prober")
@@ -185,6 +183,7 @@ if [ "$dualBoot" == Y ] || [ "$dualBoot" == y ] || [ "$dualBoot" == yes ] || [ "
 then
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
 fi
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 
 
@@ -218,7 +217,7 @@ sleep 2
 
 
 # enable sddm
-#systemctl enable sddm
+systemctl enable sddm
 
 
 
