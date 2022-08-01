@@ -43,11 +43,6 @@ userName=$(users | awk '{print $1}')
 rootPartition=$(fdisk -l | grep -i "linux root" | awk '{print $1}')
 
 
-# get root partition uuid
-rootPartitionUUID=$(blkid "$rootPartition" | awk '{print $2}' | tr -d \")
-# output is of the form: UUID=*******
-
-
 # get root subvolume id
 rootSubvolumeID=$(btrfs subvolume list / | grep -i "@$" | awk '{print $2}')
 
