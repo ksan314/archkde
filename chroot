@@ -248,8 +248,8 @@ fi
 
 
 # save arch repo
-git clone "$archURL" /home/"$userName"/archbtrfs
-chown -R "$userName":users /home/"$userName"/archbtrfs
+git clone "$archURL" /home/"$userName"/arch
+chown -R "$userName":users /home/"$userName"/arch
 
 
 
