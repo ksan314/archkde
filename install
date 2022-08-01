@@ -555,8 +555,9 @@ printf "\e[1,32m\nFinishing installation\n\e[0m"
 sleep 2
 
 
-# delete variables
-rm /mnt/{confidentials,chroot}
+# delete variables and chroot.sh
+rm /mnt/confidentials
+rm /mnt/chroot.sh
 
 
 # unmount all partitions
