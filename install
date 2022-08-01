@@ -284,7 +284,7 @@ pacman -S --needed --noconfirm archlinux-keyring hwinfo lshw
 ######################################
 
 # get arch url
-archURL=$(grep -i url /root/archbtrfs/.git/config | awk '{print $3}')
+archURL=$(grep -i url /root/arch/.git/config | awk '{print $3}')
 
 
 # is disk an nvme?
