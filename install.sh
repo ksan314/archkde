@@ -529,15 +529,15 @@ cp ./confidentials /mnt
 
 
 # copy the chroot script to destination system's root partition
-cp ./chroot /mnt
+cp ./chroot.sh /mnt
 
 
 # change file permission of chroot script to make it executable
-chmod +x /mnt/chroot
+chmod +x /mnt/chroot.sh
 
 
 # change root into the new environment and run chroot script
-arch-chroot /mnt /chroot
+arch-chroot /mnt /chroot.sh
 
 
 
