@@ -131,7 +131,7 @@ systemctl enable snapper-cleanup.timer
 # backup boot partition on pacman transactions
 # see "snapshots and /boot parition" section on "system backup" arch wiki page
 mkdir /etc/pacman.d/hooks
-cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
+cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
 
 
 # configure zram
@@ -335,7 +335,7 @@ fi
 ##########################
 
 # remove no longer needed files
-rm -rf /home/"$userName"/archbtrfs
+rm -rf /home/"$userName"/arch
 
 
 # manually create a snapshot???
