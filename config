@@ -48,6 +48,10 @@ rootPartitionUUID=$(blkid "$rootPartition" | awk '{print $2}' | tr -d \")
 # output is of the form: UUID=*******
 
 
+# get root subvolume id
+rootSubvolumeID=$(btrfs subvolume list / | grep -i "@$" | awk '{print $2}')
+
+
 # get swap size in MB, equal to 25% of ram, and convert to integer
 ramSize=$(free -m | grep -i mem | awk '{print $2}')
 swapSize=$(echo -e ""$ramSize" * 0.25" | bc)
@@ -80,23 +84,54 @@ sleep 2
 
 
 # configure snapper
+# the following configuration works
+#umount /.snapshots
+#rm -r /.snapshots
+#snapper -c root create-config /
+#btrfs subvolume delete /.snapshots
+#mkdir /.snapshots
+#mount -a
+#chmod 750 /.snapshots
+# still need to edit /etc/snapper/configs/root
+#systemctl enable snapper-timeline.timer
+#systemctl enable snapper-cleanup.timer
+# manually create a snapshot??
+
+
+# configure snapper
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
 #snapper -c home create-config /home
+# maybe the line above wont work or dont need to do it at all. if it is necessary, need to configure snapshots on /home and snap-pac
 btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
 chmod 750 /.snapshots
-# still need to edit /etc/snapper/configs/root
+# set root subvolume as default subvolume
+btrfs subvolume set-default "$rootSubvolumeID" /
+# configure snapper config for root subvolume
+sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
+# may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
+# give wheel group access to /.snapshots directory
+chmod a+rx /.snapshots
+chown :wheel /.snapshots
+# may need to change to .snapshots for previous 2 lines
+# create a manual snapshot before running the rest of config.sh
+snapper -c root create -d "***Before config.sh***"
+# regenerate grub.cfg so manual snapshot will be available in grub menu (dont think this needs to be done due to grub-btrfs.path systemd service)
+# grub-mkconfig -o /boot/grub/grub.cfg
+# enable systemd services
+systemctl enable --now grub-btrfs.path
+# starting will regenerate grub.cfg and add snapshots to grub
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
 
 
-# backup boot partition on kernel update
+# backup boot partition on pacman transactions
+# see "snapshots and /boot parition" section on "system backup" arch wiki page
 mkdir /etc/pacman.d/hooks
 cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
-# see "system backup" page on the arch wiki
 
 
 # configure zram
@@ -104,12 +139,16 @@ systemctl enable zramd
 zramd start -f 0.25 -m "$swapsizeInteger"
 
 
-# enable fstrim
-systemctl enable fstrim.timer
-
-
 # configure paccache
 systemctl enable paccache.timer
+
+
+# enable man-db.timer
+systemctl enable man-db.timer
+
+
+# enable fstrim
+systemctl enable fstrim.timer
 
 
 # enable bluetooth
@@ -297,6 +336,9 @@ fi
 
 # remove no longer needed files
 rm -rf /home/"$userName"/archbtrfs
+
+
+# manually create a snapshot???
 
 
 # reboot
