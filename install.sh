@@ -371,6 +371,9 @@ ping -c 5 archlinux.org
 printf "\e[1;32m\nConfiguring storage\n\e[0m"
 sleep 2
 
+# unmount partitions from /mnt if any are mounted
+umount -R /mnt
+
 
 # shred disk
 if [ "$diskShred" == true ]
