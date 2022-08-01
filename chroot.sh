@@ -40,14 +40,8 @@ read -r hostName userName userPassword rootPassword dualBoot timeZone reflectorC
 
 
 
-# configure pacman and reflector, and install all needed packages
-#################################################################
-
-# configure reflector
-pacman -S --needed --noconfirm reflector
-echo -e "--country "$reflectorCode"" >> /etc/xdg/reflector/reflector.conf
-systemctl enable --now reflector.service
-
+# configure pacman, and install all needed packages
+###################################################
 
 # configure pacman
 sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
@@ -58,7 +52,7 @@ pacman -S --needed --asdeps --noconfirm pacman-contrib pacutils
 # install essential packages
 printf "\e[1;32m\nInstalling essential packages\n\e[0m"
 sleep 2
-pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip rsync shellcheck sudo texinfo tldr ufw unzip vim zip zoxide
+pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck sudo texinfo tldr ufw unzip vim zip zoxide
 # snap-pac snapper
 
 
@@ -166,7 +160,7 @@ echo -e "127.0.1.1   $hostName" >> /etc/hosts
 
 # configure root user
 echo -e "$rootPassword\n$rootPassword" | passwd root
-# echo -e "root ALL=(ALL:ALL) ALL" >> /etc/sudoers
+echo -e "root ALL=(ALL:ALL) ALL" >> /etc/sudoers
 
 
 # configure user
@@ -201,23 +195,26 @@ then
 fi
 
 
-
-
-
-
-
-
-
-
-# enable network manager and ssdm to boot into KDE Plasma
-#########################################################
-
-printf "\e[1;32m\nEnabling KDE Plasma\n\e[0m"
-sleep 2
+# configure reflector
+echo -e "--country "$reflectorCode"" >> /etc/xdg/reflector/reflector.conf
+systemctl enable reflector.timer
 
 
 # enable network manager
 systemctl enable NetworkManager
+
+
+
+
+
+
+
+
+# enable ssdm to boot into KDE Plasma
+#####################################
+
+printf "\e[1;32m\nEnabling KDE Plasma\n\e[0m"
+sleep 2
 
 
 # enable sddm
