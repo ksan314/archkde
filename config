@@ -96,7 +96,6 @@ systemctl enable snapper-cleanup.timer
 # backup boot partition on kernel update
 mkdir /etc/pacman.d/hooks
 cp /home/"$userName"/archbtrfs/files/95-bootbackup.hook /etc/pacman.d/hooks
-# make sure the file is owned by root after copying
 # see "system backup" page on the arch wiki
 
 
