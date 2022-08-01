@@ -1,5 +1,5 @@
 #!/bin/bash
-# this script gets user input, automatically gets system information, checks to see if system is ready for install, creates a 1GB FAT32 efi partition, creates a btrfs root partition that takes up the rest of the disk and conforms to the snapper suggested filesystem layout on the arch wiki, installs linux, then chroots into system and runs chroot script
+# this script gets user input, automatically gets system information, checks to see if system is ready for install, creates a 1GB FAT32 efi partition, creates a btrfs root partition that takes up the rest of the disk and conforms to the snapper suggested filesystem layout from the arch wiki, installs linux, then chroots into system and runs chroot script
 
 
 
