@@ -83,7 +83,7 @@ printf "\e[1;32m\nConfiguring system\n\e[0m"
 sleep 2
 
 
-# configure snapper
+# configure snapshots (snapper)
 # the following configuration works
 #umount /.snapshots
 #rm -r /.snapshots
@@ -98,7 +98,7 @@ sleep 2
 # manually create a snapshot??
 
 
-# configure snapper
+# configure snapshots (snapper)
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
