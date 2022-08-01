@@ -44,20 +44,21 @@ read -r hostName userName userPassword rootPassword dualBoot timeZone reflectorC
 #################################################################
 
 # configure reflector
+pacman -S --needed --noconfirm reflector
 echo -e "--country "$reflectorCode"" >> /etc/xdg/reflector/reflector.conf
 systemctl enable --now reflector.service
 
 
 # configure pacman
 sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
-pacman -Syu
-pacman -S --needed --noconfirm pacman-contrib pacutils
+pacman -Syu --noconfirm
+pacman -S --needed --asdeps --noconfirm pacman-contrib pacutils
 
 
 # install essential packages
 printf "\e[1;32m\nInstalling essential packages\n\e[0m"
 sleep 2
-pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
+pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
 
 
 # install kde plasma
