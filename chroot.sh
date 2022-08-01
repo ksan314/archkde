@@ -58,7 +58,8 @@ pacman -S --needed --asdeps --noconfirm pacman-contrib pacutils
 # install essential packages
 printf "\e[1;32m\nInstalling essential packages\n\e[0m"
 sleep 2
-pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
+pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip rsync shellcheck sudo texinfo tldr ufw unzip vim zip zoxide
+# snap-pac snapper
 
 
 # install kde plasma
