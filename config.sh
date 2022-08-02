@@ -118,16 +118,16 @@ mount -a
 chmod 750 /.snapshots
 # set root subvolume as default subvolume
 btrfs subvolume set-default "$rootSubvolumeID" /
-# configure snapper config for root and home subvolumes
-sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
-sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="users"/' /etc/snapper/configs/home
-# may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
 # give wheel group access to /.snapshots directory
 chmod a+rx /.snapshots
 chown :wheel /.snapshots
 # enables automatic timeline snapshots and automatic cleanup based on /etc/snapper/configs
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
+# configure snapper config for root and home subvolumes
+sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
+sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="users"/' /etc/snapper/configs/home
+# may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
 
 # configure grub-btrfs
 # updates grub snapshots menu when new snapshots are created
