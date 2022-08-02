@@ -71,8 +71,8 @@ fi
 
 
 
-# configure system
-##################
+# configure snapshots
+#####################
 
 printf "\e[1;32m\nConfiguring system\n\e[0m"
 sleep 2
@@ -104,15 +104,12 @@ sleep 2
 #snapper -c root create -d "***Before config.sh***"
 
 
-# configure snapshots
-#####################
 
 # configure snapper
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
-snapper -c home create-config /home/"$userName"
-# may need to change back to /home
+snapper -c home create-config /home
 btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
@@ -127,7 +124,7 @@ systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
 # configure snapper config for root and home subvolumes
 sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
-sed -i '/sALLOW_GROUPS=""/ALLOW_USERS=""$userName""/' /etc/snapper/configs/home/"$userName"
+sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
 # may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
 
 # configure grub-btrfs
@@ -152,6 +149,17 @@ snapper -c home/"$userName" create -d "***Before config.sh***"
 mkdir /etc/pacman.d/hooks
 cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
 
+
+
+
+
+
+
+
+
+
+# configure system
+##################
 
 # configure zram
 zramd start -f 0.25 -m "$swapsizeInteger"
