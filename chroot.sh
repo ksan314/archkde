@@ -45,8 +45,8 @@ read -r hostName userName userPassword rootPassword dualBoot timeZone reflectorC
 
 # configure pacman
 sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
-pacman -Syu --noconfirm
-pacman -S --needed --asdeps --noconfirm pacman-contrib pacutils
+pacman -Syu
+pacman -S --needed --asdeps pacman-contrib pacutils
 
 
 # install essential packages
@@ -65,6 +65,10 @@ pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
 printf "\e[1;32m\nInstalling printing packages\n\e[0m"
 sleep 2
 pacman -S --needed print-manager
+
+
+# enable microcode updates
+pacman -S --needed "$processorVendor"-ucode
 
 
 # install graphics drivers
@@ -165,10 +169,6 @@ echo -e "root ALL=(ALL:ALL) ALL" >> /etc/sudoers
 useradd -m -g users -G wheel -s /bin/bash "$userName"
 echo -e "$userPassword\n$userPassword" | passwd "$userName"
 echo -e "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
-
-
-# enable microcode updates
-pacman -S --needed --noconfirm "$processorVendor"-ucode
 
 
 # configure mkinitcpio.conf
