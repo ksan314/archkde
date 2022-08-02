@@ -554,7 +554,7 @@ arch-chroot /mnt /chroot.sh
 # finish installation
 #####################
 
-printf "\e[1,32m\nFinishing installation\n\e[0m"
+printf "\e[1;32m\nFinishing installation\n\e[0m"
 sleep 2
 
 
