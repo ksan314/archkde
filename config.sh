@@ -111,7 +111,8 @@ sleep 2
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
-snapper -c home create-config /home
+snapper -c home create-config /home/"$userName"
+# may need to change back to /home
 btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
@@ -126,7 +127,7 @@ systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
 # configure snapper config for root and home subvolumes
 sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
-sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="users"/' /etc/snapper/configs/home
+sed -i '/sALLOW_GROUPS=""/ALLOW_USERS=""$userName""/' /etc/snapper/configs/home/"$userName"
 # may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
 
 # configure grub-btrfs
@@ -136,7 +137,7 @@ systemctl enable --now grub-btrfs.path
 
 # create a snapshot before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
-snapper -c home create -d "***Before config.sh***"
+snapper -c home/"$userName" create -d "***Before config.sh***"
 ########################################################################################3
 # i still want automatic snapshots for my home directory, they shouldnt be shown in grub since that can be a security issue and i dont know if its possible.
 
