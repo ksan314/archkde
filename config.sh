@@ -74,35 +74,8 @@ fi
 # configure snapshots
 #####################
 
-printf "\e[1;32m\nConfiguring system\n\e[0m"
+printf "\e[1;32m\nConfiguring snapshots\n\e[0m"
 sleep 2
-
-
-# configure snapshots
-# this configuration works
-#umount /.snapshots
-#rm -r /.snapshots
-#snapper -c root create-config /
-#btrfs subvolume delete /.snapshots
-#mkdir /.snapshots
-#mount -a
-#chmod 750 /.snapshots
-# set root subvolume as default subvolume
-#btrfs subvolume set-default "$rootSubvolumeID" /
-# configure snapper config for root subvolume
-#sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
-# may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
-# give wheel group access to /.snapshots directory
-#chmod a+rx /.snapshots
-#chown :wheel /.snapshots
-# enable systemd services
-#systemctl enable --now grub-btrfs.path
-# starting will regenerate grub.cfg and add snapshots to grub
-#systemctl enable snapper-timeline.timer
-#systemctl enable snapper-cleanup.timer
-# create a snapshot before running the rest of config.sh
-#snapper -c root create -d "***Before config.sh***"
-
 
 
 # configure snapper
@@ -123,7 +96,7 @@ chown :wheel /.snapshots
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
 # may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
-# enables automatic timeline snapshots and automatic cleanup based on /etc/snapper/configs
+# enable automatic timeline snapshots and automatic cleanup based on /etc/snapper/configs
 systemctl enable --now snapper-timeline.timer
 systemctl enable --now snapper-cleanup.timer
 
@@ -133,16 +106,15 @@ systemctl enable --now snapper-cleanup.timer
 systemctl enable --now grub-btrfs.path
 # may need to edit /etc/default/grub-btrfs/config
 
+
 # configure snap-pac
 # edit the file /etc/snap-pac.ini
 # see snap-pac man page
 
+
 # create a snapshot before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
 snapper -c home/"$userName" create -d "***Before config.sh***"
-########################################################################################3
-# i still want automatic snapshots for my home directory, they shouldnt be shown in grub since that can be a security issue and i dont know if its possible.
-
 
 
 # backup boot partition on pacman transactions
@@ -161,6 +133,10 @@ cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
 
 # configure system
 ##################
+
+printf "\e[1;32m\nConfiguring system\n\e[0m"
+sleep 2
+
 
 # configure zram
 zramd start -f 0.25 -m "$swapsizeInteger"
