@@ -55,18 +55,6 @@ sleep 2
 pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
 
 
-# install kde plasma
-printf "\e[1;32m\nInstalling KDE Plasma\n\e[0m"
-sleep 2
-pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
-
-
-# install printing packages
-printf "\e[1;32m\nInstalling printing packages\n\e[0m"
-sleep 2
-pacman -S --needed print-manager
-
-
 # enable microcode updates
 pacman -S --needed "$processorVendor"-ucode
 
@@ -91,6 +79,12 @@ then
 fi
 
 
+# install printing packages
+printf "\e[1;32m\nInstalling printing packages\n\e[0m"
+sleep 2
+pacman -S --needed print-manager
+
+
 # install dependencies
 printf "\e[1;32m\nInstalling dependencies\n\e[0m"
 sleep 2
@@ -110,7 +104,6 @@ do
     fi
 done
 
-
 # printing
 pacman -S --needed --asdeps avahi cups cups-pdf nss-mdns system-config-printer usbutils
 # set as dependencies
@@ -125,6 +118,12 @@ do
         sed -i "s/%DEPENDS%/%DEPENDS%\n""$n""/g" /var/lib/pacman/local/"$package"/desc
     fi
 done
+
+
+# install kde plasma
+printf "\e[1;32m\nInstalling KDE Plasma\n\e[0m"
+sleep 2
+pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
 
 
 
