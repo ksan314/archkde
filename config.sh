@@ -130,6 +130,8 @@ systemctl enable snapper-cleanup.timer
 # create a snapshot before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
 snapper -c home create -d "***Before config.sh***"
+########################################################################################3
+# i still want automatic snapshots for my home directory, they shouldnt be shown in grub since that can be a security issue and im not sure its possible
 
 
 # backup boot partition on pacman transactions
