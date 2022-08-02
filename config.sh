@@ -122,7 +122,7 @@ sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
 # give wheel group access to /.snapshots directory
 chmod a+rx /.snapshots
 chown :wheel /.snapshots
-# enable systemd services
+# enable systemd services                       # specity which services
 systemctl enable --now grub-btrfs.path
 # starting will regenerate grub.cfg and add snapshots to grub
 systemctl enable snapper-timeline.timer
