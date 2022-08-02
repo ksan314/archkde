@@ -303,6 +303,7 @@ pacman -S --needed --noconfirm python-pywal
 su -c "wal -i /usr/share/wallpapers/wallpaper.jpg" "$userName"
 echo -e "\n# Enables pywal theme on reboot" >> /home/"$userName"/.bashrc
 echo -e "(cat ~/.cache/wal/sequences &)" >> /home/"$userName"/.bashrc
+# colors are saved in /home/cache/wal/colors.yml
 #
 # indexer
 echo -e "only basic indexing=true" >> /home/"$userName"/.config/baloofilerc
