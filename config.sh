@@ -79,26 +79,10 @@ sleep 2
 
 
 # configure snapshots (snapper)
-# the following configuration works
-#umount /.snapshots
-#rm -r /.snapshots
-#snapper -c root create-config /
-#btrfs subvolume delete /.snapshots
-#mkdir /.snapshots
-#mount -a
-#chmod 750 /.snapshots
-# still need to edit /etc/snapper/configs/root
-#systemctl enable snapper-timeline.timer
-#systemctl enable snapper-cleanup.timer
-# manually create a snapshot??
-
-
-# configure snapshots (snapper)
+# this configuration works
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
-#snapper -c home create-config /home
-# maybe the line above wont work or dont need to do it at all. if it is necessary, need to configure snapshots on /home and snap-pac
 btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
@@ -111,7 +95,6 @@ sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 # give wheel group access to /.snapshots directory
 chmod a+rx /.snapshots
 chown :wheel /.snapshots
-# may need to change to .snapshots for previous 2 lines
 # enable systemd services
 systemctl enable --now grub-btrfs.path
 # starting will regenerate grub.cfg and add snapshots to grub
@@ -119,8 +102,33 @@ systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
 # create a snapshot before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
-# regenerate grub.cfg so manual snapshot will be available in grub menu (dont think this needs to be done due to grub-btrfs.path systemd service)
-# grub-mkconfig -o /boot/grub/grub.cfg
+
+
+# configure snapshots (snapper)
+umount /.snapshots
+rm -r /.snapshots
+snapper -c root create-config /
+snapper -c home create-config /home
+btrfs subvolume delete /.snapshots
+mkdir /.snapshots
+mount -a
+chmod 750 /.snapshots
+# set root subvolume as default subvolume
+btrfs subvolume set-default "$rootSubvolumeID" /
+# configure snapper config for root and home subvolumes
+sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
+sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
+# may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
+# give wheel group access to /.snapshots directory
+chmod a+rx /.snapshots
+chown :wheel /.snapshots
+# enable systemd services
+systemctl enable --now grub-btrfs.path
+# starting will regenerate grub.cfg and add snapshots to grub
+systemctl enable snapper-timeline.timer
+systemctl enable snapper-cleanup.timer
+# create a snapshot before running the rest of config.sh
+snapper -c root create -d "***Before config.sh***"
 
 
 # backup boot partition on pacman transactions
