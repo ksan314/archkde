@@ -129,6 +129,7 @@ systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
 # create a snapshot before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
+snapper -c home create -d "***Before config.sh***"
 
 
 # backup boot partition on pacman transactions
@@ -344,6 +345,7 @@ rm -rf /home/"$userName"/arch
 
 # create a snapshot
 snapper -c root create -d "***After config.sh***"
+snapper -c home create -d "***After config.sh***"
 
 
 # reboot
