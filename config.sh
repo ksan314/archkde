@@ -135,6 +135,10 @@ sed -i '/sALLOW_GROUPS=""/ALLOW_USERS=""$userName""/' /etc/snapper/configs/home/
 systemctl enable --now grub-btrfs.path
 # may need to edit /etc/default/grub-btrfs/config
 
+# configure snap-pac
+# edit the file /etc/snap-pac.ini
+# see snap-pac man page
+
 # create a snapshot before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
 snapper -c home/"$userName" create -d "***Before config.sh***"
