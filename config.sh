@@ -78,7 +78,7 @@ printf "\e[1;32m\nConfiguring system\n\e[0m"
 sleep 2
 
 
-# configure snapshots (snapper)
+# configure snapshots
 # this configuration works
 #umount /.snapshots
 #rm -r /.snapshots
@@ -104,7 +104,9 @@ sleep 2
 #snapper -c root create -d "***Before config.sh***"
 
 
-# configure snapshots (snapper)
+# configure snapshots
+
+# configure snapper
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
@@ -122,14 +124,14 @@ sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="users"/' /etc/snapper/configs/home
 # give wheel group access to /.snapshots directory
 chmod a+rx /.snapshots
 chown :wheel /.snapshots
-##############################################
-# still need to edit /etc/snapper/configs
-# enable systemd services
-# updates grub snapshots menu when new snapshots are created
-systemctl enable --now grub-btrfs.path
 # enables automatic timeline snapshots and automatic cleanup based on /etc/snapper/configs
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
+
+# configure grub-btrfs
+# updates grub snapshots menu when new snapshots are created
+systemctl enable --now grub-btrfs.path
+
 # create a snapshot before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
 snapper -c home create -d "***Before config.sh***"
