@@ -105,6 +105,7 @@ sleep 2
 
 
 # configure snapshots
+#####################
 
 # configure snapper
 umount /.snapshots
@@ -131,6 +132,7 @@ systemctl enable snapper-cleanup.timer
 # configure grub-btrfs
 # updates grub snapshots menu when new snapshots are created
 systemctl enable --now grub-btrfs.path
+# may need to edit /etc/default/grub-btrfs/config
 
 # create a snapshot before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
