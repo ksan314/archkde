@@ -269,7 +269,7 @@ sleep 3
 printf "\e[1;32m\nInstalling packages needed for installation\n\e[0m"
 sleep 2
 
-pacman -S --needed --noconfirm archlinux-keyring hwinfo lshw
+pacman -S --needed archlinux-keyring hwinfo lshw
 
 
 
@@ -371,7 +371,7 @@ ping -c 5 archlinux.org
 printf "\e[1;32m\nConfiguring storage\n\e[0m"
 sleep 2
 
-# unmount partitions from /mnt if any are mounted
+# unmount any partitions mounted to /mnt
 umount -R /mnt
 
 
