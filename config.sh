@@ -122,9 +122,12 @@ sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
 # give wheel group access to /.snapshots directory
 chmod a+rx /.snapshots
 chown :wheel /.snapshots
-# enable systemd services                       # specify which services
+##############################################
+# still need to edit /etc/snapper/configs
+# enable systemd services
+# updates grub snapshots menu when new snapshots are created
 systemctl enable --now grub-btrfs.path
-# starting will regenerate grub.cfg and add snapshots to grub
+# enables automatic timeline snapshots and automatic cleanup based on /etc/snapper/configs
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
 # create a snapshot before running the rest of config.sh
@@ -132,7 +135,6 @@ snapper -c root create -d "***Before config.sh***"
 snapper -c home create -d "***Before config.sh***"
 ########################################################################################3
 # i still want automatic snapshots for my home directory, they shouldnt be shown in grub since that can be a security issue and i dont know if its possible.
-# still need to edit files in /etc/snapper/configs
 
 
 
