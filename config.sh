@@ -130,8 +130,8 @@ cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
 
 
 # configure zram
-systemctl enable zramd
 zramd start -f 0.25 -m "$swapsizeInteger"
+systemctl enable zramd
 
 
 # configure paccache
