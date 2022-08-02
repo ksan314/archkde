@@ -117,7 +117,7 @@ chmod 750 /.snapshots
 btrfs subvolume set-default "$rootSubvolumeID" /
 # configure snapper config for root and home subvolumes
 sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
-sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS=""$userName""/' /etc/snapper/configs/home
+sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="users"/' /etc/snapper/configs/home
 # may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
 # give wheel group access to /.snapshots directory
 chmod a+rx /.snapshots
