@@ -80,28 +80,28 @@ sleep 2
 
 # configure snapshots (snapper)
 # this configuration works
-umount /.snapshots
-rm -r /.snapshots
-snapper -c root create-config /
-btrfs subvolume delete /.snapshots
-mkdir /.snapshots
-mount -a
-chmod 750 /.snapshots
+#umount /.snapshots
+#rm -r /.snapshots
+#snapper -c root create-config /
+#btrfs subvolume delete /.snapshots
+#mkdir /.snapshots
+#mount -a
+#chmod 750 /.snapshots
 # set root subvolume as default subvolume
-btrfs subvolume set-default "$rootSubvolumeID" /
+#btrfs subvolume set-default "$rootSubvolumeID" /
 # configure snapper config for root subvolume
-sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
+#sed -i '/sALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 # may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
 # give wheel group access to /.snapshots directory
-chmod a+rx /.snapshots
-chown :wheel /.snapshots
+#chmod a+rx /.snapshots
+#chown :wheel /.snapshots
 # enable systemd services
-systemctl enable --now grub-btrfs.path
+#systemctl enable --now grub-btrfs.path
 # starting will regenerate grub.cfg and add snapshots to grub
-systemctl enable snapper-timeline.timer
-systemctl enable snapper-cleanup.timer
+#systemctl enable snapper-timeline.timer
+#systemctl enable snapper-cleanup.timer
 # create a snapshot before running the rest of config.sh
-snapper -c root create -d "***Before config.sh***"
+#snapper -c root create -d "***Before config.sh***"
 
 
 # configure snapshots (snapper)
