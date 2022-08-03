@@ -44,6 +44,8 @@ read -r hostName userName userPassword rootPassword dualBoot timeZone reflectorC
 ###################################################
 
 # configure pacman
+printf "\e[1;32m\nConfiguring pacman\n\e[0m"
+sleep 2
 sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
 pacman -Syu
 pacman -S --needed --asdeps pacman-contrib pacutils
@@ -56,6 +58,8 @@ pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils gi
 
 
 # enable microcode updates
+printf "\e[1;32m\nEnabling microcode updates\n\e[0m"
+sleep 2
 pacman -S --needed "$processorVendor"-ucode
 
 
