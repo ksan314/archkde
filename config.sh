@@ -90,8 +90,11 @@ chmod 750 /.snapshots
 # set root subvolume as default subvolume
 btrfs subvolume set-default "$rootSubvolumeID" /
 # give wheel group access to /.snapshots directory
-chmod a+rx /.snapshots
+chmod g+rx /.snapshots
 chown :wheel /.snapshots
+# give wheel group access to /home/.snapshots directory
+chmod g+rx /home/.snapshots
+chown :wheel /home/.snapshots
 # configure snapper configs for root and home subvolumes
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
