@@ -199,7 +199,8 @@ then
 # configure bash
 #
 echo -e "\n# colored bash prompt" >> /home/"$userName"/.bashrc
-echo 'export PS1="\[\e[34m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[34m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \[\e[31m\]\W\[\e[m\]\[\e[34m\]]\[\e[m\]\[\e[31m\]\\$\[\e[m\] "' >> /home/"$userName"/.bashrc
+# echo 'export PS1="\[\e[34m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[34m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \[\e[31m\]\W\[\e[m\]\[\e[34m\]]\[\e[m\]\[\e[31m\]\\$\[\e[m\] "' >> /home/"$userName"/.bashrc
+echo 'export PS1="\[\e[36m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[36m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \[\e[37m\]\W\[\e[m\]\[\e[36m\]]\[\e[m\]\[\e[37m\]\\$\[\e[m\] "' >> /home/"$userName"/.bashrc
 #
 echo -e "\n# enables color" >> /home/"$userName"/.bashrc
 echo -e "alias diff='diff --color=auto'" >> /home/"$userName"/.bashrc
@@ -209,11 +210,18 @@ echo -e "alias ls='ls --color=auto'" >> /home/"$userName"/.bashrc
 echo -e "alias pactree='pactree --color'" >> /home/"$userName"/.bashrc
 echo -e "alias sudo='sudo '" >> /home/"$userName"/.bashrc
 echo -e "alias info='pinfo'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_md=$'\e[1;32m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_me=$'\e[0m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_us=$'\e[1;4;34m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_ue=$'\e[0m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_so=$'\e[01;31m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_se=$'\e[0m'" >> /home/"$userName"/.bashrc
+
 echo "export LESS_TERMCAP_md=$'\e[1;32m'" >> /home/"$userName"/.bashrc
 echo "export LESS_TERMCAP_me=$'\e[0m'" >> /home/"$userName"/.bashrc
-echo "export LESS_TERMCAP_us=$'\e[1;4;34m'" >> /home/"$userName"/.bashrc
+echo "export LESS_TERMCAP_us=$'\e[1;4;36m'" >> /home/"$userName"/.bashrc
 echo "export LESS_TERMCAP_ue=$'\e[0m'" >> /home/"$userName"/.bashrc
-echo "export LESS_TERMCAP_so=$'\e[01;31m'" >> /home/"$userName"/.bashrc
+echo "export LESS_TERMCAP_so=$'\e[01;37m'" >> /home/"$userName"/.bashrc
 echo "export LESS_TERMCAP_se=$'\e[0m'" >> /home/"$userName"/.bashrc
 #
 echo -e "\n# enables cd auto-correct" >> /home/"$userName"/.bashrc
@@ -236,11 +244,17 @@ sed -i 's/#BottomUp/BottomUp/' /etc/paru.conf
 
 
 # configure pinfo
+#sed -i 's/COL_MENU           = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_MENU           = COLOR_GREEN  ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
+#sed -i 's/COL_NOTE           = COLOR_GREEN  ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_NOTE           = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
+#sed -i 's/COL_TOPLINE        = COLOR_YELLOW ,  COLOR_BLUE   ,  BOLD   ,  NO_BLINK/COL_TOPLINE        = COLOR_BLACK  ,  COLOR_GREEN  ,  BOLD   ,  NO_BLINK/' /etc/pinforc
+#sed -i 's/COL_BOTTOMLINE     = COLOR_YELLOW ,  COLOR_BLUE   ,  BOLD   ,  NO_BLINK/COL_BOTTOMLINE     = COLOR_BLACK  ,  COLOR_GREEN  ,  BOLD   ,  NO_BLINK/' /etc/pinforc
+#sed -i 's/COL_URL            = COLOR_MAGENTA,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_URL            = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
+
 sed -i 's/COL_MENU           = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_MENU           = COLOR_GREEN  ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
-sed -i 's/COL_NOTE           = COLOR_GREEN  ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_NOTE           = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
+sed -i 's/COL_NOTE           = COLOR_GREEN  ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_NOTE           = COLOR_CYAN   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
 sed -i 's/COL_TOPLINE        = COLOR_YELLOW ,  COLOR_BLUE   ,  BOLD   ,  NO_BLINK/COL_TOPLINE        = COLOR_BLACK  ,  COLOR_GREEN  ,  BOLD   ,  NO_BLINK/' /etc/pinforc
 sed -i 's/COL_BOTTOMLINE     = COLOR_YELLOW ,  COLOR_BLUE   ,  BOLD   ,  NO_BLINK/COL_BOTTOMLINE     = COLOR_BLACK  ,  COLOR_GREEN  ,  BOLD   ,  NO_BLINK/' /etc/pinforc
-sed -i 's/COL_URL            = COLOR_MAGENTA,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_URL            = COLOR_BLUE   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
+sed -i 's/COL_URL            = COLOR_MAGENTA,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/COL_URL            = COLOR_CYAN   ,  COLOR_DEFAULT,  BOLD   ,  NO_BLINK/' /etc/pinforc
 
 
 # configure bat
