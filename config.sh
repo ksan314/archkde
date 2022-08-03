@@ -164,7 +164,7 @@ systemctl enable paccache.timer
 systemctl enable man-db.timer
 
 
-# enable fstrim
+# enable disk trim
 systemctl enable fstrim.timer
 
 
@@ -173,7 +173,7 @@ systemctl enable bluetooth.service
 sed -i 's/#AutoEnable=false/AutoEnable=false/' /etc/bluetooth/main.conf
 
 
-# configure cups
+# configure printing
 systemctl enable --now avahi-daemon.service
 sed -i 's/mymachines/mymachines mdns_minimal [NOTFOUND=return]/' /etc/nsswitch.conf
 systemctl enable cups.socket
