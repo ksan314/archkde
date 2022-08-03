@@ -153,7 +153,8 @@ sleep 2
 
 
 # configure zram
-zramd start -f 0.25 -m "$swapsizeInteger"
+sed -i 's/FRACTION=[0-9,\.]*/FRACTION=0.5/' /etc/default/zramd
+sed -i 's/MAX_SIZE=[0-9,\.]*/MAX_SIZE="$ramSize"/' /etc/default/zramd
 systemctl enable zramd
 
 
