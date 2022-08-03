@@ -252,7 +252,7 @@ done
 
 # user input ended
 printf "\e[1;32m\nNo more user input needed\n\e[0m"
-sleep 3
+sleep 2
 
 
 
