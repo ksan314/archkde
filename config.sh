@@ -125,7 +125,7 @@ echo -e "snapshot = True" >> /etc/snap-pac.ini
 
 # manually create snapshots before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
-snapper -c home/"$userName" create -d "***Before config.sh***"
+snapper -c home create -d "***Before config.sh***"
 
 
 # backup boot partition on kernel updates (see "snapshots and /boot parition" section on "system backup" arch wiki page)
