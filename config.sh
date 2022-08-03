@@ -113,24 +113,22 @@ systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
 
 
-# configure grub-btrfs
-# updates grub snapshots menu when new snapshots are created
+# configure grub-btrfs (updates grub snapshots menu when new snapshots are created)
 systemctl enable --now grub-btrfs.path
 # may need to edit /etc/default/grub-btrfs/config
 
 
-# configure snap-pac
-# edit the file /etc/snap-pac.ini
-# see snap-pac man page
+# configure snap-pac for home subvolume (see snap-pac man page)
+echo -e "[home]" >> /etc/snap-pac.ini
+echo -e "snapshot = True" >> /etc/snap-pac.ini
 
 
-# create a snapshot before running the rest of config.sh
+# manually create snapshots before running the rest of config.sh
 snapper -c root create -d "***Before config.sh***"
 snapper -c home/"$userName" create -d "***Before config.sh***"
 
 
-# backup boot partition on pacman transactions
-# see "snapshots and /boot parition" section on "system backup" arch wiki page
+# backup boot partition on kernel updates (see "snapshots and /boot parition" section on "system backup" arch wiki page)
 mkdir /etc/pacman.d/hooks
 cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
 
