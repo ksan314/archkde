@@ -324,6 +324,7 @@ echo -e "\n[Greeter][Wallpaper][org.kde.image][General]\nImage=/usr/share/wallpa
 echo -e "[General]\nbackground=/usr/share/wallpapers/wallpaper.jpg" > /usr/share/sddm/themes/breeze/theme.conf.user
 #
 # colors based on wallpaper with pywal
+# check if python-pywal is installed
 su -c "wal -i /usr/share/wallpapers/wallpaper.jpg" "$userName"
 echo -e "\n# Enables pywal theme on reboot" >> /home/"$userName"/.bashrc
 echo -e "(cat ~/.cache/wal/sequences &)" >> /home/"$userName"/.bashrc
