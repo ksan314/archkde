@@ -78,7 +78,7 @@ printf "\e[1;32m\nConfiguring snapshots\n\e[0m"
 sleep 2
 
 
-# configure snapper
+# configure snapper (see snapper page on arch wiki)
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
@@ -98,7 +98,16 @@ chown :wheel /home/.snapshots
 # configure snapper configs for root and home subvolumes
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
-# may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
+sed -i 's/HOURLY"[0-9]*"/HOURLY="5"/' /etc/snapper/configs/root
+sed -i 's/DAILY"[0-9]*"/DAILY="5"/' /etc/snapper/configs/root
+sed -i 's/WEEKLY"[0-9]*"/WEEKLY="5"/' /etc/snapper/configs/root
+sed -i 's/MONTHLY"[0-9]*"/MONTHLY="5"/' /etc/snapper/configs/root
+sed -i 's/YEARLY"[0-9]*"/YEARLY="5"/' /etc/snapper/configs/root
+sed -i 's/HOURLY"[0-9]*"/HOURLY="5"/' /etc/snapper/configs/home
+sed -i 's/DAILY"[0-9]*"/DAILY="5"/' /etc/snapper/configs/home
+sed -i 's/WEEKLY"[0-9]*"/WEEKLY="5"/' /etc/snapper/configs/home
+sed -i 's/MONTHLY"[0-9]*"/MONTHLY="5"/' /etc/snapper/configs/home
+sed -i 's/YEARLY"[0-9]*"/YEARLY="5"/' /etc/snapper/configs/home
 # enable automatic timeline snapshots and automatic cleanup based on /etc/snapper/configs
 systemctl enable snapper-timeline.timer
 systemctl enable snapper-cleanup.timer
