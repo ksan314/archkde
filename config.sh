@@ -87,8 +87,8 @@ btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
 chmod 750 /.snapshots
-# set root subvolume as default subvolume
-btrfs subvolume set-default "$rootSubvolumeID" /
+# set root subvolume as default subvolume ################# is this necessary??
+# btrfs subvolume set-default "$rootSubvolumeID" /
 # give wheel group access to /.snapshots directory
 chmod g+rx /.snapshots
 chown :wheel /.snapshots
