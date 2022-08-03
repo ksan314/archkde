@@ -97,8 +97,8 @@ sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
 # may also need to change "limits for timeline cleanup" (see snapper arch wiki page for reccomendation)
 # enable automatic timeline snapshots and automatic cleanup based on /etc/snapper/configs
-systemctl enable --now snapper-timeline.timer
-systemctl enable --now snapper-cleanup.timer
+systemctl enable snapper-timeline.timer
+systemctl enable snapper-cleanup.timer
 
 
 # configure grub-btrfs
