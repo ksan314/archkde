@@ -148,6 +148,10 @@ printf "\e[1;32m\nConfiguring system\n\e[0m"
 sleep 2
 
 
+###################################################
+# configure btrfs (see "btrfs" arch wiki page)
+
+
 # configure zram
 zramd start -f 0.25 -m "$swapsizeInteger"
 systemctl enable zramd
