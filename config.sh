@@ -325,10 +325,14 @@ echo -e "[General]\nbackground=/usr/share/wallpapers/wallpaper.jpg" > /usr/share
 #
 # colors based on wallpaper with pywal
 # check if python-pywal is installed
-su -c "wal -i /usr/share/wallpapers/wallpaper.jpg" "$userName"
-echo -e "\n# Enables pywal theme on reboot" >> /home/"$userName"/.bashrc
-echo -e "(cat ~/.cache/wal/sequences &)" >> /home/"$userName"/.bashrc
-# colors are saved in /home/cache/wal/colors.yml
+pythonpywalExists=$(pacman -Qqs python-pywal)
+if [ "$pythonpywalExists" == python-pywal ]
+then
+    su -c "wal -i /usr/share/wallpapers/wallpaper.jpg" "$userName"
+    echo -e "\n# Enables pywal theme on reboot" >> /home/"$userName"/.bashrc
+    echo -e "(cat ~/.cache/wal/sequences &)" >> /home/"$userName"/.bashrc
+    # colors are saved in /home/cache/wal/colors.yml
+fi
 #
 # indexer
 echo -e "only basic indexing=true" >> /home/"$userName"/.config/baloofilerc
