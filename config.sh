@@ -79,23 +79,27 @@ sleep 2
 
 
 # configure snapper (see snapper page on arch wiki)
+# delete /.snapshots directory since snapper will automatically create a /.snapshots subvolume when creating a root config
 umount /.snapshots
 rm -r /.snapshots
+# create snapper configs
 snapper -c root create-config /
 snapper -c home create-config /home  # maybe i need to delete the /home/.snapshots subvolume and mkdir /home/.snapshots ??
+# delete subvolume automatically created by snapper
 btrfs subvolume delete /.snapshots
+# re-create snapshots directory and mount based on fstab file
 mkdir /.snapshots
 mount -a
 chmod 750 /.snapshots
-# set root subvolume as default subvolume ################# is this necessary??
-# btrfs subvolume set-default "$rootSubvolumeID" /
+# set root subvolume as default subvolume so we can boot from snapshots of root subvolume
+btrfs subvolume set-default "$rootSubvolumeID" /
 # give wheel group access to /.snapshots directory
 chmod g+rx /.snapshots
-chown :wheel /.snapshots
+chown -R :wheel /.snapshots         # maybe remove the -R
 # give wheel group access to /home/.snapshots directory
 chmod g+rx /home/.snapshots
-chown :wheel /home/.snapshots
-# configure snapper configs for root and home subvolumes
+chown -R :wheel /home/.snapshots    # maybe remove the -R
+# configure snapper config for root subvolume
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/root
 sed -i 's/ALLOW_GROUPS=""/ALLOW_GROUPS="wheel"/' /etc/snapper/configs/home
 sed -i 's/HOURLY="[0-9]*"/HOURLY="5"/' /etc/snapper/configs/root
@@ -103,6 +107,7 @@ sed -i 's/DAILY="[0-9]*"/DAILY="5"/' /etc/snapper/configs/root
 sed -i 's/WEEKLY="[0-9]*"/WEEKLY="5"/' /etc/snapper/configs/root
 sed -i 's/MONTHLY="[0-9]*"/MONTHLY="5"/' /etc/snapper/configs/root
 sed -i 's/YEARLY="[0-9]*"/YEARLY="5"/' /etc/snapper/configs/root
+# configure snapper config for home subvolume
 sed -i 's/HOURLY="[0-9]*"/HOURLY="5"/' /etc/snapper/configs/home
 sed -i 's/DAILY="[0-9]*"/DAILY="5"/' /etc/snapper/configs/home
 sed -i 's/WEEKLY="[0-9]*"/WEEKLY="5"/' /etc/snapper/configs/home
@@ -115,6 +120,7 @@ systemctl enable snapper-cleanup.timer
 
 # configure grub-btrfs (updates grub snapshots menu when new snapshots are created)
 systemctl enable --now grub-btrfs.path
+grub-mkconfig -o /boot/grub/grub.cfg
 # may need to edit /etc/default/grub-btrfs/config
 
 
@@ -123,14 +129,14 @@ echo -e "[home]" >> /etc/snap-pac.ini
 echo -e "snapshot = True" >> /etc/snap-pac.ini
 
 
-# manually create snapshots before running the rest of config.sh
-snapper -c root create -d "***Before config.sh***"
-snapper -c home create -d "***Before config.sh***"
-
-
 # backup boot partition on kernel updates (see "snapshots and /boot parition" section on "system backup" arch wiki page)
 mkdir /etc/pacman.d/hooks
 cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
+
+
+# manually create snapshots before running the rest of config.sh
+snapper -c root create -d "***Before config.sh***"
+snapper -c home create -d "***Before config.sh***"
 
 
 
