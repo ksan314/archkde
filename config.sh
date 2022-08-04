@@ -50,6 +50,11 @@ rootSubvolumeID=$(btrfs subvolume list / | grep -i "@$" | awk '{print $2}')
 # get ram size in MB
 ramSize=$(free -m | grep -i mem | awk '{print $2}')
 
+# get zram size in 
+ramSize=$(free -m | grep -i mem | awk '{print $2}')
+swapSize=$(echo -e ""$ramSize" * 0.25" | bc)
+swapsizeInteger=${swapSize%.*}
+
 
 # get custom config
 customConfig=$(ls /home/"$userName" | grep -io personal)
