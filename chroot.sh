@@ -48,19 +48,19 @@ printf "\e[1;32m\nConfiguring pacman\n\e[0m"
 sleep 2
 sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
 pacman -Syu
-pacman -S --needed --asdeps pacman-contrib pacutils
+pacman -S --needed --asdeps --noconfirm pacman-contrib pacutils
 
 
 # install essential packages
 printf "\e[1;32m\nInstalling essential packages\n\e[0m"
 sleep 2
-pacman -S --needed base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
+pacman -S --needed --noconfirm base-devel bat btrfs-progs coreutils exfat-utils findutils git grub hwinfo ifuse libimobiledevice lshw man-db man-pages nano networkmanager nmap noto-fonts noto-fonts-emoji npm ntfs-3g pinfo plocate python-pip reflector rsync shellcheck snap-pac snapper sudo texinfo tldr ufw unzip vim zip zoxide
 
 
 # enable microcode updates
 printf "\e[1;32m\nEnabling microcode updates\n\e[0m"
 sleep 2
-pacman -S --needed "$processorVendor"-ucode
+pacman -S --needed --noconfirm "$processorVendor"-ucode
 
 
 # install graphics drivers
@@ -71,7 +71,7 @@ then
 fi
 if [ "$graphicsVendor" == amd ]
 then
-    pacman -S --needed mesa lib32-mesa lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau vulkan-radeon xf86-video-amdgpu
+    pacman -S --needed --noconfirm mesa lib32-mesa lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau vulkan-radeon xf86-video-amdgpu
 fi
 if [ "$graphicsVendor" == intel ]
 then
@@ -86,7 +86,7 @@ fi
 # install printing packages
 printf "\e[1;32m\nInstalling printing packages\n\e[0m"
 sleep 2
-pacman -S --needed print-manager
+pacman -S --needed --noconfirm print-manager
 
 
 # install dependencies
@@ -94,7 +94,7 @@ printf "\e[1;32m\nInstalling dependencies\n\e[0m"
 sleep 2
 
 # grub
-pacman -S --needed --asdeps efibootmgr grub-btrfs os-prober
+pacman -S --needed --asdeps --noconfirm efibootmgr grub-btrfs os-prober
 # set as dependencies
 package=grub
 dependsOn=("efibootmgr" "grub-btrfs" "os-prober")
@@ -109,7 +109,7 @@ do
 done
 
 # printing
-pacman -S --needed --asdeps avahi cups cups-pdf nss-mdns system-config-printer usbutils
+pacman -S --needed --asdeps --noconfirm avahi cups cups-pdf nss-mdns system-config-printer usbutils
 # set as dependencies
 package=print-manager
 dependsOn=("avahi" "cups" "cups-pdf" "nss-mdns" "system-config-printer" "usbutils")
@@ -127,7 +127,7 @@ done
 # install kde plasma
 printf "\e[1;32m\nInstalling KDE Plasma\n\e[0m"
 sleep 2
-pacman -S --needed kde-graphics kde-system kde-utilities plasma sddm xorg
+pacman -S --needed --noconfirm kde-graphics kde-system kde-utilities plasma sddm xorg
 
 
 
