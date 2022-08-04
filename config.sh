@@ -47,12 +47,9 @@ rootPartition=$(fdisk -l | grep -i "linux root" | awk '{print $1}')
 rootSubvolumeID=$(btrfs subvolume list / | grep -i "@$" | awk '{print $2}')
 
 
-# get ram size in MB
+# get zram size in MB, equal to half the size of ram, and convert to integer
 ramSize=$(free -m | grep -i mem | awk '{print $2}')
-
-# get zram size in 
-ramSize=$(free -m | grep -i mem | awk '{print $2}')
-swapSize=$(echo -e ""$ramSize" * 0.25" | bc)
+swapSize=$(echo -e ""$ramSize" * 0.5" | bc)
 swapsizeInteger=${swapSize%.*}
 
 
@@ -157,7 +154,7 @@ sleep 2
 
 # configure zram
 sed -i 's/FRACTION=[0-9,\.]*/FRACTION=0.5/' /etc/default/zramd
-sed -i 's/MAX_SIZE=[0-9,\.]*/MAX_SIZE="$ramSize"/' /etc/default/zramd
+sed -i 's/MAX_SIZE=[0-9,\.]*/MAX_SIZE="$swapsizeInteger"/' /etc/default/zramd
 systemctl enable zramd
 
 
