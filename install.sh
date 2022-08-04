@@ -433,7 +433,7 @@ then
   btrfs subvolume create /mnt/@var_log
   umount /mnt
   #mount -o noatime,compress=zstd,space_cache=v2,subvol=@ "$diskName"p2 /mnt
-  mount -o noatime,compress=zstd,space_cache=v2 "$diskName"p2 /mnt
+  mount -o defaults,noatime,compress=zstd,space_cache=v2 "$diskName"p2 /mnt
   mkdir /mnt/boot
   mkdir /mnt/home
   mkdir /mnt/.snapshots
@@ -441,9 +441,9 @@ then
   #mount -o noatime,compress=zstd,space_cache=v2,subvol=@home "$diskName"p2 /mnt/home
   #mount -o noatime,compress=zstd,space_cache=v2,subvol=@snapshots "$diskName"p2 /mnt/.snapshots
   #mount -o noatime,compress=zstd,space_cache=v2,subvol=@var_log "$diskName"p2 /mnt/var/log
-  mount -o noatime,compress=zstd,space_cache=v2 "$diskName"p2 /mnt/home
-  mount -o noatime,compress=zstd,space_cache=v2 "$diskName"p2 /mnt/.snapshots
-  mount -o noatime,compress=zstd,space_cache=v2 "$diskName"p2 /mnt/var/log
+  mount -o defaults,noatime,compress=zstd,space_cache=v2 "$diskName"p2 /mnt/home
+  mount -o defaults,noatime,compress=zstd,space_cache=v2 "$diskName"p2 /mnt/.snapshots
+  mount -o defaults,noatime,compress=zstd,space_cache=v2 "$diskName"p2 /mnt/var/log
   mount "$diskName"p1 /mnt/boot
 fi
 if [ "$nvme" == false ]
@@ -455,7 +455,7 @@ then
   btrfs subvolume create /mnt/@var_log
   umount /mnt
   #mount -o noatime,compress=lzo,space_cache=v2,subvol=@ "$diskName"2 /mnt
-  mount -o noatime,compress=zstd,space_cache=v2 "$diskName"2 /mnt
+  mount -o defaults,noatime,compress=zstd,space_cache=v2 "$diskName"2 /mnt
   mkdir /mnt/boot
   mkdir /mnt/home
   mkdir /mnt/.snapshots
@@ -463,9 +463,9 @@ then
   #mount -o noatime,compress=lzo,space_cache=v2,subvol=@home "$diskName"2 /mnt/home
   #mount -o noatime,compress=lzo,space_cache=v2,subvol=@snapshots "$diskName"2 /mnt/.snapshots
   #mount -o noatime,compress=lzo,space_cache=v2,subvol=@var_log "$diskName"2 /mnt/var/log
-  mount -o noatime,compress=zstd,space_cache=v2 "$diskName"2 /mnt/home
-  mount -o noatime,compress=zstd,space_cache=v2 "$diskName"2 /mnt/.snapshots
-  mount -o noatime,compress=zstd,space_cache=v2 "$diskName"2 /mnt/var/log
+  mount -o defaults,noatime,compress=zstd,space_cache=v2 "$diskName"2 /mnt/home
+  mount -o defaults,noatime,compress=zstd,space_cache=v2 "$diskName"2 /mnt/.snapshots
+  mount -o defaults,noatime,compress=zstd,space_cache=v2 "$diskName"2 /mnt/var/log
   mount "$diskName"1 /mnt/boot
 fi
 
