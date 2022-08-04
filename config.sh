@@ -82,11 +82,11 @@ sleep 2
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
+snapper -c home create-config /home
 btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
 chmod 750 /.snapshots
-snapper -c home create-config /home # (may need to move this up to below snapper -c root create-config /)
 # set root subvolume as default subvolume ################# is this necessary??
 # btrfs subvolume set-default "$rootSubvolumeID" /
 # give wheel group access to /.snapshots directory
