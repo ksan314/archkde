@@ -82,7 +82,7 @@ sleep 2
 umount /.snapshots
 rm -r /.snapshots
 snapper -c root create-config /
-snapper -c home create-config /home
+snapper -c home create-config /home  # maybe i need to delete the /home/.snapshots subvolume and mkdir /home/.snapshots ??
 btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
