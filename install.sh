@@ -269,7 +269,7 @@ sleep 2
 printf "\e[1;32m\nInstalling packages needed for installation\n\e[0m"
 sleep 2
 
-pacman -S --needed archlinux-keyring hwinfo lshw
+pacman -S --needed hwinfo lshw
 
 
 
