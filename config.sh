@@ -121,7 +121,7 @@ systemctl enable snapper-cleanup.timer
 # configure grub-btrfs (updates grub snapshots menu when new snapshots are created)
 systemctl enable --now grub-btrfs.path
 grub-mkconfig -o /boot/grub/grub.cfg
-# may need to edit /etc/default/grub-btrfs/config
+# may need to edit /etc/default/grub-btrfs/config (edit to require password)
 
 
 # configure snap-pac for home subvolume (see snap-pac man page)
