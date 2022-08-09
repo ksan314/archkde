@@ -210,8 +210,7 @@ then
 # configure bash
 #
 echo -e "\n# colored bash prompt" >> /home/"$userName"/.bashrc
-# echo 'export PS1="\[\e[34m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[34m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \[\e[31m\]\W\[\e[m\]\[\e[34m\]]\[\e[m\]\[\e[31m\]\\$\[\e[m\] "' >> /home/"$userName"/.bashrc
-echo 'export PS1="\[\e[36m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[36m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \[\e[37m\]\W\[\e[m\]\[\e[36m\]]\[\e[m\]\[\e[37m\]\\$\[\e[m\] "' >> /home/"$userName"/.bashrc
+echo 'export PS1="\[\e[34m\][\[\e[m\]\[\e[32m\]\u\[\e[m\]\[\e[34m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \[\e[31m\]\W\[\e[m\]\[\e[34m\]]\[\e[m\]\[\e[31m\]\\$\[\e[m\] "' >> /home/"$userName"/.bashrc
 #
 echo -e "\n# enables color" >> /home/"$userName"/.bashrc
 echo -e "alias diff='diff --color=auto'" >> /home/"$userName"/.bashrc
