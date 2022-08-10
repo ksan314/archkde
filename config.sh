@@ -294,9 +294,9 @@ echo -e "[/home/$userName/.local/share/Trash]\nDays=14\nLimitReachedAction=0\nPe
 # configure kde plasma
 # config files
 cp /home/"$userName"/personal/plasma/wallpaper.jpg /usr/share/wallpapers
-su -c "cp /home/$userName/personal/plasma/mimeapps.list /home/"$userName"/.config" "$userName"
-su -c "cp /home/$userName/personal/plasma/plasmanotifyrc /home/"$userName"/.config" "$userName"
-su -c "cp /home/$userName/personal/plasma/plasma-org.kde.plasma.desktop-appletsrc /home/"$userName"/.config" "$userName"
+su -c "cp /home/$userName/personal/plasma/mimeapps.list /home/$userName/.config" "$userName"
+su -c "cp /home/$userName/personal/plasma/plasmanotifyrc /home/$userName/.config" "$userName"
+su -c "cp /home/$userName/personal/plasma/plasma-org.kde.plasma.desktop-appletsrc /home/$userName/.config" "$userName"
 sed -i 's/\[General\]/\[General\]\nBrowserApplication=chromium.desktop\nTerminalApplication=guake\nTerminalService=guake.desktop/' /home/"$userName"/.config/kdeglobals
 #
 # theme
