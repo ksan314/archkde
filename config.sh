@@ -39,10 +39,6 @@ fi
 userName=$(users | awk '{print $1}')
 
 
-# get root partition
-rootPartition=$(fdisk -l | grep -i "linux root" | awk '{print $1}')
-
-
 # get root subvolume id
 rootSubvolumeID=$(btrfs subvolume list / | grep -i "@$" | awk '{print $2}')
 
@@ -284,23 +280,23 @@ systemctl enable libvirtd.service
 
 
 # configure dolphin
-su -c "mkdir -p /home/"$userName"/.local/share/kxmlgui5/dolphin" "$userName"
-su -c "cp /home/"$userName"/personal/plasma/dolphinui.rc /home/"$userName"/.local/share/kxmlgui5/dolphin" "$userName"
-su -c "touch /home/"$userName"/.config/dolphinrc" "$userName"
+su -c "mkdir -p /home/$userName/.local/share/kxmlgui5/dolphin" "$userName"
+su -c "cp /home/$userName/personal/plasma/dolphinui.rc /home/$userName/.local/share/kxmlgui5/dolphin" "$userName"
+su -c "touch /home/$userName/.config/dolphinrc" "$userName"
 echo -e "[General]\nRememberOpenedTabs=false" >> /home/"$userName"/.config/dolphinrc
-su -c "mkdir -p /home/"$userName"/.local/share/dolphin/view_properties/global" "$userName"
-su -c "touch /home/"$userName"/.local/share/dolphin/view_properties/global/.directory" "$userName"
+su -c "mkdir -p /home/$userName/.local/share/dolphin/view_properties/global" "$userName"
+su -c "touch /home/$userName/.local/share/dolphin/view_properties/global/.directory" "$userName"
 echo -e "[Settings]\nHiddenFilesShown=true" >> /home/"$userName"/.local/share/dolphin/view_properties/global/.directory
-su -c "touch /home/"$userName"/.config/ktrashrc" "$userName"
+su -c "touch /home/$userName/.config/ktrashrc" "$userName"
 echo -e "[/home/$userName/.local/share/Trash]\nDays=14\nLimitReachedAction=0\nPercent=10\nUseSizeLimit=true\nUseTimeLimit=true" >> /home/"$userName"/.config/ktrashrc
 
 
 # configure kde plasma
 # config files
 cp /home/"$userName"/personal/plasma/wallpaper.jpg /usr/share/wallpapers
-su -c "cp /home/"$userName"/personal/plasma/mimeapps.list /home/"$userName"/.config" "$userName"
-su -c "cp /home/"$userName"/personal/plasma/plasmanotifyrc /home/"$userName"/.config" "$userName"
-su -c "cp /home/"$userName"/personal/plasma/plasma-org.kde.plasma.desktop-appletsrc /home/"$userName"/.config" "$userName"
+su -c "cp /home/$userName/personal/plasma/mimeapps.list /home/"$userName"/.config" "$userName"
+su -c "cp /home/$userName/personal/plasma/plasmanotifyrc /home/"$userName"/.config" "$userName"
+su -c "cp /home/$userName/personal/plasma/plasma-org.kde.plasma.desktop-appletsrc /home/"$userName"/.config" "$userName"
 sed -i 's/\[General\]/\[General\]\nBrowserApplication=chromium.desktop\nTerminalApplication=guake\nTerminalService=guake.desktop/' /home/"$userName"/.config/kdeglobals
 #
 # theme
@@ -313,7 +309,7 @@ sed -i 's/\[General\]/\[General\]\nAccentColor=61,212,37/' /home/"$userName"/.co
 #
 # wallpaper
 # desktop wallpaper
-su -c "touch /home/"$userName"/.config/plasmarc" "$userName"
+su -c "touch /home/$userName/.config/plasmarc" "$userName"
 echo -e "[Wallpapers]\nusersWallpapers=/usr/share/wallpapers/wallpaper.jpg" > /home/"$userName"/.config/plasmarc
 # lock screen wallpaper
 echo -e "\n[Greeter][Wallpaper][org.kde.image][General]\nImage=/usr/share/wallpapers/wallpaper.jpg" >> /home/"$userName"/.config/kscreenlockerrc
@@ -335,15 +331,15 @@ fi
 echo -e "only basic indexing=true" >> /home/"$userName"/.config/baloofilerc
 #
 # autostart apps
-#su -c "mkdir -p /home/"$userName"/.config/autostart" "$userName"
+#su -c "mkdir -p /home/$userName/.config/autostart" "$userName"
 #su -c "cp /usr/share/applications/guake.desktop /home/"$userName"/.config/autostart" "$userName"
 #chown -R "$userName":users /home/"$userName"/.config/autostart/guake.desktop
 
 
 # save config files to desktop
-su -c "cp /home/"$userName"/personal/plasma/guake.config /home/"$userName"/Desktop" "$userName"
-su -c "cp /home/"$userName"/personal/plasma/qbittorrent.txt /home/"$userName"/Desktop" "$userName"
-su -c "cp /home/"$userName"/personal/plasma/system_monitor.page /home/"$userName"/Desktop" "$userName"
+su -c "cp /home/$userName/personal/plasma/guake.config /home/$userName/Desktop" "$userName"
+su -c "cp /home/$userName/personal/plasma/qbittorrent.txt /home/$userName/Desktop" "$userName"
+su -c "cp /home/$userName/personal/plasma/system_monitor.page /home/$userName/Desktop" "$userName"
 
 
 # remove custom config files
