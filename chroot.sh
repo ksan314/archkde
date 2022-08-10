@@ -198,12 +198,12 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # enable and speed up package builds
 if [ "$cpuThreads" != null ]
 then
-    sed -i "s/#MAKEFLAGS=\"-j[0-9]*\"/MAKEFLAGS=\"-j"$cpuThreads"\"/g" /etc/makepkg.conf
+    sed -i "s/#MAKEFLAGS=\"-j[0-9]*\"/MAKEFLAGS=\"-j$cpuThreads\"/g" /etc/makepkg.conf
 fi
 
 
 # configure reflector
-echo -e "--country "$reflectorCode"" >> /etc/xdg/reflector/reflector.conf
+echo -e "--country $reflectorCode" >> /etc/xdg/reflector/reflector.conf
 systemctl enable reflector.timer
 
 
