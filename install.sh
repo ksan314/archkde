@@ -193,12 +193,12 @@ diskName=$(lsblk -o PATH,SIZE,TYPE,MODEL,PTTYPE | grep -i "$selectedDisk" | awk 
 # get disk shred
 while true
 do
-read -rp $'\n'"Would you like to erase all data on the disk \"$diskName\"? [y/N] " diskShred
+read -rp $'\n'"Would you like to erase all data on the disk $diskName? [y/N] " diskShred
     diskShred=${diskShred:-N}
     if [ "$diskShred" == Y ] || [ "$diskShred" == y ] || [ "$diskShred" == yes ] || [ "$diskShred" == YES ] || [ "$diskShred" == Yes ]
     then
         diskShred=true
-        read -rp $'\n'"Are you sure you DO want to erase all data on the disk \"$diskName\"? [Y/n] " diskshredConfirm
+        read -rp $'\n'"Are you sure you DO want to erase all data on the disk $diskName? [Y/n] " diskshredConfirm
         diskshredConfirm=${diskshredConfirm:-Y}
         case $diskshredConfirm in
             [yY][eE][sS]|[yY]) break;;
@@ -208,7 +208,7 @@ read -rp $'\n'"Would you like to erase all data on the disk \"$diskName\"? [y/N]
         REPLY=
     else
         diskShred=false
-        read -rp $'\n'"Are you sure you DO NOT want to erase all data on the disk \"$diskName\"? [Y/n] " diskshredConfirm
+        read -rp $'\n'"Are you sure you DO NOT want to erase all data on the disk $diskName? [Y/n] " diskshredConfirm
         diskshredConfirm=${diskshredConfirm:-Y}
         case $diskshredConfirm in
             [yY][eE][sS]|[yY]) break;;
