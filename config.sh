@@ -131,8 +131,8 @@ cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
 
 
 # manually create snapshots before running the rest of config.sh
-snapper -c root create -d "***Before config.sh***"
-snapper -c home create -d "***Before config.sh***"
+snapper -c root create -d "***before config.sh***"
+snapper -c home create -d "***before config.sh***"
 
 
 
@@ -366,8 +366,8 @@ rm -rf /home/"$userName"/arch
 
 
 # create a snapshot
-snapper -c root create -d "***After config.sh***"
-snapper -c home create -d "***After config.sh***"
+snapper -c root create -d "***after config.sh***"
+snapper -c home create -d "***after config.sh***"
 
 
 # reboot
