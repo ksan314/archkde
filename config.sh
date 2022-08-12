@@ -216,12 +216,13 @@ echo -e "alias ls='ls --color=auto'" >> /home/"$userName"/.bashrc
 echo -e "alias pactree='pactree --color'" >> /home/"$userName"/.bashrc
 echo -e "alias sudo='sudo '" >> /home/"$userName"/.bashrc
 echo -e "alias info='pinfo'" >> /home/"$userName"/.bashrc
-echo "export LESS_TERMCAP_md=$'\e[1;32m'" >> /home/"$userName"/.bashrc
-echo "export LESS_TERMCAP_me=$'\e[0m'" >> /home/"$userName"/.bashrc
-echo "export LESS_TERMCAP_us=$'\e[1;4;34m'" >> /home/"$userName"/.bashrc
-echo "export LESS_TERMCAP_ue=$'\e[0m'" >> /home/"$userName"/.bashrc
-echo "export LESS_TERMCAP_so=$'\e[01;31m'" >> /home/"$userName"/.bashrc
-echo "export LESS_TERMCAP_se=$'\e[0m'" >> /home/"$userName"/.bashrc
+export MANPAGER="less -R --use-color -Dd+r -Du+b"
+#echo "export LESS_TERMCAP_md=$'\e[1;32m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_me=$'\e[0m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_us=$'\e[1;4;34m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_ue=$'\e[0m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_so=$'\e[01;31m'" >> /home/"$userName"/.bashrc
+#echo "export LESS_TERMCAP_se=$'\e[0m'" >> /home/"$userName"/.bashrc
 #
 echo -e "\n# enables cd auto-correct" >> /home/"$userName"/.bashrc
 echo -e "shopt -s cdspell" >> /home/"$userName"/.bashrc
