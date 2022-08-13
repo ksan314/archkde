@@ -159,7 +159,8 @@ done
 
 
 # install desktop packages
-pacman -S --needed --noconfirm alacritty dmenu sddm sway swayidle swaylock xorg-xwayland
+#pacman -S --needed --noconfirm alacritty dmenu sddm sway swayidle swaylock xorg-xwayland
+pacman -S --needed --noconfirm alacritty sway swayidle swaylock
 
 
 
