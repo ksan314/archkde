@@ -159,7 +159,7 @@ done
 
 
 # install desktop packages
-pacman -S --needed --noconfirm alacritty lightdm lightdm-gtk-greeter sway
+pacman -S --needed --noconfirm alacritty lightdm lightdm-gtk-greeter sway wayland
 
 
 
@@ -261,7 +261,7 @@ sleep 2
 
 # enable sddm
 #systemctl enable sddm
-systemctl enable lightdm
+#systemctl enable lightdm
 
 
 
