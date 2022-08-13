@@ -261,7 +261,7 @@ sleep 2
 
 # enable sddm
 #systemctl enable sddm
-#systemctl enable lightdm
+#systemctl enable lightdm.service
 
 
 
