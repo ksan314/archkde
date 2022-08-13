@@ -260,7 +260,7 @@ sleep 2
 
 
 # enable sddm
-systemctl enable sddm
+systemctl enable sddm.service
 
 
 
