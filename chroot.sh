@@ -159,7 +159,7 @@ done
 
 
 # install desktop packages
-pacman -S --needed --noconfirm alacritty lightdm sway
+pacman -S --needed --noconfirm alacritty lightdm lightdm-gtk-greeter sway
 
 
 
