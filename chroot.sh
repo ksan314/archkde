@@ -299,8 +299,8 @@ fi
 
 
 # save arch repo
-git clone "$archURL" /home/"$userName"/arch
-chown -R "$userName":users /home/"$userName"/arch
+git clone "$archURL" /home/"$userName"/archkde
+chown -R "$userName":users /home/"$userName"/archkde
 
 
 
