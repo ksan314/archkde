@@ -87,7 +87,7 @@ fi
 # install printing packages
 printf "\e[1;32m\nInstalling printing packages\n\e[0m"
 sleep 2
-#pacman -S --needed --noconfirm print-manager
+pacman -S --needed --noconfirm print-manager
 
 
 # install dependencies
@@ -110,44 +110,10 @@ do
 done
 
 # printing
-#pacman -S --needed --asdeps --noconfirm avahi cups cups-pdf nss-mdns system-config-printer usbutils
+pacman -S --needed --asdeps --noconfirm avahi cups cups-pdf nss-mdns system-config-printer usbutils
 # set as dependencies
-#package=print-manager
-#dependsOn=("avahi" "cups" "cups-pdf" "nss-mdns" "system-config-printer" "usbutils")
-#package=$(ls /var/lib/pacman/local | grep -i "$package")
-#for n in "${dependsOn[@]}";
-#do
-    #needed=$(grep -io "$n" /var/lib/pacman/local/"$package"/desc)
-    #if [ -z "$needed" ]
-    #then
-        #sed -i "s/%DEPENDS%/%DEPENDS%\n""$n""/g" /var/lib/pacman/local/"$package"/desc
-    #fi
-#done
-
-
-# install kde plasma
-#printf "\e[1;32m\nInstalling KDE Plasma\n\e[0m"
-#sleep 2
-#pacman -S --needed --noconfirm kde-graphics kde-system kde-utilities plasma sddm xorg
-
-
-###################################################################
-
-# for i3
-
-# install printing packages
-printf "\e[1;32m\nInstalling printing packages\n\e[0m"
-sleep 2
-pacman -S --needed --noconfirm system-config-printer
-
-
-# install dependencies
-
-# printing
-pacman -S --needed --asdeps --noconfirm avahi cups cups-pdf nss-mdns usbutils
-# set as dependencies
-package=system-config-printer
-dependsOn=("avahi" "cups" "cups-pdf" "nss-mdns" "usbutils")
+package=print-manager
+dependsOn=("avahi" "cups" "cups-pdf" "nss-mdns" "system-config-printer" "usbutils")
 package=$(ls /var/lib/pacman/local | grep -i "$package")
 for n in "${dependsOn[@]}";
 do
@@ -159,18 +125,10 @@ do
 done
 
 
-
-
-
-
-
-
-
-
-#################################################################
-
-# install i3 packages
-pacman -S --needed --noconfirm alacritty dmenu feh i3-gaps i3lock picom polybar sddm xorg xorg-xinit
+# install kde plasma
+printf "\e[1;32m\nInstalling KDE Plasma\n\e[0m"
+sleep 2
+pacman -S --needed --noconfirm kde-graphics kde-system kde-utilities plasma sddm xorg
 
 
 
