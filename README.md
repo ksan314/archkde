@@ -8,7 +8,7 @@ The installation includes printing capabilities, bluetooth, and automatic recomm
 ### Details
 
   - Dual booting on the same disk is not supported. The installation will remove all date on the disk selected by the user. It will include a 1GB FAT32 efi boot partition, and a btrfs root partition that takes up the rest of the disk that conforms to the snapper suggested filesystem layout from the arch wiki
-  - To scroll up and down during installation, press "Ctrl+b" then "[", then you can use the arrow or page up/down keys. To exit scrolling mode, press "q"
+  - To scroll up and down during installation, press "Ctrl+b" then "\[", then you can use the arrow or page up/down keys. To exit scrolling mode, press "q"
   - Cancel the installation at any time with "Ctrl+c"
 
 ---
