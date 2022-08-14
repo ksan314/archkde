@@ -132,7 +132,7 @@ done
 
 ###################################################################
 
-# for sway
+# for i3
 
 # install printing packages
 printf "\e[1;32m\nInstalling printing packages\n\e[0m"
@@ -159,8 +159,7 @@ done
 
 
 # install desktop packages
-#pacman -S --needed --noconfirm alacritty dmenu sddm sway swayidle swaylock xorg-xwayland
-pacman -S --needed --noconfirm alacritty sway swayidle swaylock
+pacman -S --needed --noconfirm alacritty dmenu i3 picom sddm xorg
 
 
 
@@ -261,7 +260,7 @@ sleep 2
 
 
 # enable sddm
-#systemctl enable sddm.service
+systemctl enable sddm.service
 
 
 
