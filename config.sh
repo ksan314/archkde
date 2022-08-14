@@ -127,7 +127,7 @@ echo -e "snapshot = True" >> /etc/snap-pac.ini
 
 # backup boot partition on kernel updates (see "snapshots and /boot parition" section on "system backup" arch wiki page)
 mkdir /etc/pacman.d/hooks
-cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
+cp /home/"$userName"/archkde/files/95-bootbackup.hook /etc/pacman.d/hooks
 
 
 # manually create snapshots before running the rest of config.sh
@@ -394,7 +394,7 @@ fi
 ##########################
 
 # remove no longer needed files
-rm -rf /home/"$userName"/arch
+rm -rf /home/"$userName"/archkde
 
 
 # create a snapshot
