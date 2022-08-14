@@ -24,13 +24,13 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
       - `station [device_name] get-networks`
       - `station [device_name] conenct [network_name]`
   3. `pacman -Sy git` 
-  4. `git clone https://github.com/ksanf3/arch`
-  5. `cd arch`
+  4. `git clone https://github.com/ksanf3/archkde`
+  5. `cd archkde`
   6. `chmod +x ./install.sh`
   7. `./install.sh`
       - Read the input prompts carefully. This will install arch linux, along with KDE desktop environment. You need to reboot when done.
   8. If you chose to include the repo owner's custom configurations, there should be a file on the desktop, read it before continuing.
-  9. Run the config script with the following commands to finish configuring the system...
+  9. After the script is done and you reboot run the config script with the following commands to finish configuring the system...
       - `su`
-      - `chmod +x arch/config.sh`
-      - `arch/config.sh`
+      - `chmod +x archkde/config.sh`
+      - `archkde/config.sh`
