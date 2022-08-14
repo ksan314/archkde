@@ -148,7 +148,9 @@ snapper -c home create -d "***before config.sh***"
 
 # set wallpaper
 feh --bg-fill /usr/share/wallpapers/wallpaper.jpg
-
+# make wallpaper persist on reboot
+echo -e "\n# makes wallpaper persist on reboot\n" >> /etc/X11/xinit/xinitrc
+echo -e "~/.fehbg &" >> /etc/X11/xinit/xinitrc
 
 
 
