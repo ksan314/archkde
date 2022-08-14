@@ -285,7 +285,7 @@ pacman -S --needed hwinfo lshw
 ######################################
 
 # get arch url
-archURL=$(grep -i url /root/arch/.git/config | awk '{print $3}')
+archURL=$(grep -i url /root/archkde/.git/config | awk '{print $3}')
 
 
 # is disk an nvme?
