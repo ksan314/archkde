@@ -159,7 +159,7 @@ done
 
 
 # install desktop packages
-pacman -S --needed --noconfirm alacritty dmenu i3-gaps i3lock picom polybar sddm xorg
+pacman -S --needed --noconfirm alacritty dmenu feh i3-gaps i3lock picom polybar sddm xorg
 
 
 
