@@ -1,7 +1,7 @@
 # Description
 
 This is a bash script that installs Arch Linux in UEFI mode with KDE Plasma.
-The installation printing capabilities, bluetooth, and automatic recommended system maintenance. 
+The installation includes printing capabilities, bluetooth, and automatic recommended system maintenance. 
 
 ---
 
