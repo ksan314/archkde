@@ -211,8 +211,7 @@ systemctl enable reflector.timer
 # enable network manager
 systemctl enable NetworkManager
 
-#######################################################
-# still need to configure filesystem utilities like scrub, balance, etc (see btrfs page on arch wiki)
+
 
 
 
