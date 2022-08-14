@@ -158,8 +158,18 @@ do
 done
 
 
-# install desktop packages
-pacman -S --needed --noconfirm alacritty dmenu feh i3-gaps i3lock picom polybar sddm xorg
+
+
+
+
+
+
+
+
+#################################################################
+
+# install i3 packages
+pacman -S --needed --noconfirm alacritty dmenu feh i3-gaps i3lock picom polybar sddm xorg xorg-xinit
 
 
 
