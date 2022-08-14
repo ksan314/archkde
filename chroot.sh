@@ -221,10 +221,10 @@ systemctl enable NetworkManager
 
 
 
-# enable ssdm to boot into KDE Plasma
-#####################################
+# enable ssdm
+#############
 
-printf "\e[1;32m\nEnabling KDE Plasma\n\e[0m"
+printf "\e[1;32m\nEnabling sddm\n\e[0m"
 sleep 2
 
 
