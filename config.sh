@@ -143,6 +143,20 @@ snapper -c home create -d "***before config.sh***"
 
 
 
+# configure i3
+##############
+
+# set wallpaper
+feh --bg-fill /usr/share/wallpapers/wallpaper.jpg
+
+
+
+
+
+
+
+
+
 # configure system
 ##################
 
