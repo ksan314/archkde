@@ -325,7 +325,6 @@ echo -e "[/home/$userName/.local/share/Trash]\nDays=14\nLimitReachedAction=0\nPe
 
 # configure kde plasma
 # config files
-cp /home/"$userName"/personal/plasma/wallpaper.jpg /usr/share/wallpapers
 su -c "cp /home/$userName/personal/plasma/mimeapps.list /home/$userName/.config" "$userName"
 su -c "cp /home/$userName/personal/plasma/plasmanotifyrc /home/$userName/.config" "$userName"
 su -c "cp /home/$userName/personal/plasma/plasma-org.kde.plasma.desktop-appletsrc /home/$userName/.config" "$userName"
@@ -341,19 +340,21 @@ sed -i 's/\[General\]/\[General\]\nAccentColor=61,212,37/' /home/"$userName"/.co
 #
 # wallpaper
 # desktop wallpaper
+cp /home/"$userName"/personal/wallpapers/minimalriver.jpg /usr/share/wallpapers
+cp /home/"$userName"/personal/wallpapers/forest.jpg /usr/share/wallpapers
 su -c "touch /home/$userName/.config/plasmarc" "$userName"
-echo -e "[Wallpapers]\nusersWallpapers=/usr/share/wallpapers/wallpaper.jpg" > /home/"$userName"/.config/plasmarc
+echo -e "[Wallpapers]\nusersWallpapers=/usr/share/wallpapers/minimalriver.jpg" > /home/"$userName"/.config/plasmarc
 # lock screen wallpaper
-echo -e "\n[Greeter][Wallpaper][org.kde.image][General]\nImage=/usr/share/wallpapers/wallpaper.jpg" >> /home/"$userName"/.config/kscreenlockerrc
+echo -e "\n[Greeter][Wallpaper][org.kde.image][General]\nImage=/usr/share/wallpapers/minimalriver.jpg" >> /home/"$userName"/.config/kscreenlockerrc
 # sddm wallpaper
-echo -e "[General]\nbackground=/usr/share/wallpapers/wallpaper.jpg" > /usr/share/sddm/themes/breeze/theme.conf.user
+echo -e "[General]\nbackground=/usr/share/wallpapers/minimalriver.jpg" > /usr/share/sddm/themes/breeze/theme.conf.user
 #
 # colors based on wallpaper with pywal
 # check if python-pywal is installed
 pythonpywalExists=$(pacman -Qqs python-pywal)
 if [ "$pythonpywalExists" == python-pywal ]
 then
-    su -c "wal -i /usr/share/wallpapers/wallpaper.jpg" "$userName"
+    su -c "wal -i /usr/share/wallpapers/minimalriver.jpg" "$userName"
     echo -e "\n# Enables pywal theme on reboot" >> /home/"$userName"/.bashrc
     echo -e "(cat ~/.cache/wal/sequences &)" >> /home/"$userName"/.bashrc
     # colors are saved in /home/cache/wal/colors.yml
@@ -369,8 +370,8 @@ echo -e "only basic indexing=true" >> /home/"$userName"/.config/baloofilerc
 
 
 # save config files to desktop
-su -c "cp /home/$userName/personal/plasma/guake.config /home/$userName/Desktop" "$userName"
-su -c "cp /home/$userName/personal/plasma/qbittorrent.txt /home/$userName/Desktop" "$userName"
+su -c "cp /home/$userName/personal/guake.config /home/$userName/Desktop" "$userName"
+su -c "cp /home/$userName/personal/qbittorrent.txt /home/$userName/Desktop" "$userName"
 su -c "cp /home/$userName/personal/plasma/system_monitor.page /home/$userName/Desktop" "$userName"
 
 
