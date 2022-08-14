@@ -292,11 +292,9 @@ sleep 2
 # import custom config files
 if [ "$customConfig" == true ]
 then
-    mkdir /home/"$userName"/Desktop
-    chown -R "$userName":users /home/"$userName"/Desktop
     git clone https://github.com/ksan314/personal /home/"$userName"/personal
     chown -R "$userName":users /home/"$userName"/personal
-    cp /home/"$userName"/personal/arch/packages.txt /home/"$userName"/Desktop
+    cp /home/"$userName"/personal/arch/packages.txt /home/"$userName"
 fi
 
 
