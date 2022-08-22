@@ -91,34 +91,6 @@ read -srp $'\n'"Confirm new root password: " rootPassword2
 done
 
 
-# should the system check for other operating systems?
-while true
-do
-read -rp $'\n'"Would you like the bootloader to check for other operating systems? [Y/n] " dualBoot
-    dualBoot=${dualBoot:-Y}
-if [ "$dualBoot" == Y ] || [ "$dualBoot" == y ] || [ "$dualBoot" == yes ] || [ "$dualBoot" == YES ] || [ "$dualBoot" == Yes ]
-then
-    read -rp $'\n'"Are you sure you want the bootloader to check for other operating systems? [Y/n] " dualbootConfirm
-        dualbootConfirm=${dualbootConfirm:-Y}
-        case $dualbootConfirm in
-            [yY][eE][sS]|[yY]) break;;
-            [nN][oO]|[nN]);;
-            *);;
-        esac
-        REPLY=
-else
-   read -rp $'\n'"Are you sure you DO NOT want the bootloader to check for other operating systems? [Y/n] " dualbootConfirm
-        dualbootConfirm=${dualbootConfirm:-Y}
-        case $dualbootConfirm in
-            [yY][eE][sS]|[yY]) break;;
-            [nN][oO]|[nN]);;
-            *);;
-        esac
-        REPLY=
-fi
-done
-
-
 # get timezone
 mapfile -t timeZones < <(timedatectl list-timezones)
 PS3="Enter the number for your current timezone: "
@@ -220,6 +192,34 @@ read -rp $'\n'"Would you like to erase all data on the disk $diskName? [y/N] " d
 done
 
 
+# should the system check for other operating systems?
+while true
+do
+read -rp $'\n'"Would you like the bootloader to check for other operating systems? [Y/n] " dualBoot
+    dualBoot=${dualBoot:-Y}
+if [ "$dualBoot" == Y ] || [ "$dualBoot" == y ] || [ "$dualBoot" == yes ] || [ "$dualBoot" == YES ] || [ "$dualBoot" == Yes ]
+then
+    read -rp $'\n'"Are you sure you want the bootloader to check for other operating systems? [Y/n] " dualbootConfirm
+        dualbootConfirm=${dualbootConfirm:-Y}
+        case $dualbootConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+else
+   read -rp $'\n'"Are you sure you DO NOT want the bootloader to check for other operating systems? [Y/n] " dualbootConfirm
+        dualbootConfirm=${dualbootConfirm:-Y}
+        case $dualbootConfirm in
+            [yY][eE][sS]|[yY]) break;;
+            [nN][oO]|[nN]);;
+            *);;
+        esac
+        REPLY=
+fi
+done
+
+
 # get custom config
 while true
 do
@@ -288,12 +288,13 @@ pacman -S --needed hwinfo lshw
 archURL=$(grep -i url /root/archkde/.git/config | awk '{print $3}')
 
 
-# is disk an nvme?
-if nvme="$(echo -e "$diskName" | grep -io nvme)"
+# check if disk an nvme?
+nvme=$(echo -e "$diskName" | grep -io nvme)
+if [ -z $nvme ]
 then
-  nvme=true
+    nvme=false
 else
-  nvme=false
+    nvme=true
 fi
 
 
@@ -332,7 +333,7 @@ fi
 # save inputs that will be needed for chroot script in a file that will be sourced later
 ########################################################################################
 
-echo -e "$hostName $userName $userPassword $rootPassword $dualBoot $timeZone $reflectorCode $diskName $diskShred $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
+echo -e "$hostName $userName $userPassword $rootPassword $timeZone $reflectorCode $diskName $diskShred $dualBoot $customConfig $archURL $nvme $processorVendor $cpuThreads $graphicsVendor" > ./confidentials
 
 
 
