@@ -246,18 +246,24 @@ printf "\e[1;32m\nImporting files\n\e[0m"
 sleep 2
 
 
-# import custom config files
+# save arch repo
+su -c "git clone $archURL /home/$userName/archkde" "$userName"
+
+
+# save packages.txt
+su -c "cp /home/$userName/archkde/files/packages.txt /home/$userName" "$userName"
+
+
+# save custom config files
 if [ "$customConfig" == true ]
 then
-    git clone https://github.com/ksan314/personal /home/"$userName"/personal
-    chown -R "$userName":users /home/"$userName"/personal
-    cp /home/"$userName"/personal/arch/packages.txt /home/"$userName"
+    cp -r /home/"$userName"/archkde/files/wallpapers /usr/share
+    su -c "cp /home/$userName/archkde/files/qbittorrent.txt /home/$userName" "$userName"
 fi
 
 
-# save arch repo
-git clone "$archURL" /home/"$userName"/archkde
-chown -R "$userName":users /home/"$userName"/archkde
+
+
 
 
 
