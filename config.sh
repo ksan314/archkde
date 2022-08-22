@@ -49,9 +49,8 @@ swapSize=$(echo -e "$ramSize * 0.5" | bc)
 swapsizeInteger=${swapSize%.*}
 
 
-# get custom config
-customConfig=$(ls /home/"$userName" | grep -io personal)
-if [ "$customConfig" == personal ]
+customConfig=$(ls /usr/share | grep -io wallpapers)
+if [ "$customConfig" == wallpapers ]
 then
     customConfig=true
 else
