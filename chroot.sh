@@ -28,7 +28,7 @@ sleep 2
 # import user inputs and system information
 ###########################################
 
-read -r hostName userName userPassword rootPassword dualBoot timeZone reflectorCode diskName diskShred customConfig archURL nvme processorVendor cpuThreads graphicsVendor < /confidentials
+read -r hostName userName userPassword rootPassword timeZone reflectorCode diskName diskShred dualBoot customConfig archURL nvme processorVendor cpuThreads graphicsVendor < /confidentials
 # needs to be the exact same list of variables as in the install script
 
 
