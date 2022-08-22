@@ -216,7 +216,7 @@ echo -e "alias ls='ls --color=auto'" >> /home/"$userName"/.bashrc
 echo -e "alias pactree='pactree --color'" >> /home/"$userName"/.bashrc
 echo -e "alias sudo='sudo '" >> /home/"$userName"/.bashrc
 echo -e "alias info='pinfo'" >> /home/"$userName"/.bashrc
-export MANPAGER="less -R --use-color -Dd+r -Du+b"
+echo -e "export MANPAGER=\"less -R --use-color -Dd+g -Du+b -Ds+r\"" >> /home/"$userName"/.bashrc
 #echo "export LESS_TERMCAP_md=$'\e[1;32m'" >> /home/"$userName"/.bashrc
 #echo "export LESS_TERMCAP_me=$'\e[0m'" >> /home/"$userName"/.bashrc
 #echo "export LESS_TERMCAP_us=$'\e[1;4;34m'" >> /home/"$userName"/.bashrc
@@ -282,7 +282,7 @@ systemctl enable libvirtd.service
 
 # configure dolphin
 su -c "mkdir -p /home/$userName/.local/share/kxmlgui5/dolphin" "$userName"
-su -c "cp /home/$userName/personal/plasma/dolphinui.rc /home/$userName/.local/share/kxmlgui5/dolphin" "$userName"
+su -c "cp /home/$userName/archkde/dotfiles/dolphinui.rc /home/$userName/.local/share/kxmlgui5/dolphin" "$userName"
 su -c "touch /home/$userName/.config/dolphinrc" "$userName"
 echo -e "[General]\nRememberOpenedTabs=false" >> /home/"$userName"/.config/dolphinrc
 su -c "mkdir -p /home/$userName/.local/share/dolphin/view_properties/global" "$userName"
@@ -294,9 +294,9 @@ echo -e "[/home/$userName/.local/share/Trash]\nDays=14\nLimitReachedAction=0\nPe
 
 # configure kde plasma
 # config files
-su -c "cp /home/$userName/personal/plasma/mimeapps.list /home/$userName/.config" "$userName"
-su -c "cp /home/$userName/personal/plasma/plasmanotifyrc /home/$userName/.config" "$userName"
-su -c "cp /home/$userName/personal/plasma/plasma-org.kde.plasma.desktop-appletsrc /home/$userName/.config" "$userName"
+su -c "cp /home/$userName/archkde/dotfiles/mimeapps.list /home/$userName/.config" "$userName"
+su -c "cp /home/$userName/archkde/dotfiles/plasmanotifyrc /home/$userName/.config" "$userName"
+su -c "cp /home/$userName/archkde/dotfiles/plasma-org.kde.plasma.desktop-appletsrc /home/$userName/.config" "$userName"
 sed -i 's/\[General\]/\[General\]\nBrowserApplication=chromium.desktop\nTerminalApplication=guake\nTerminalService=guake.desktop/' /home/"$userName"/.config/kdeglobals
 #
 # theme
@@ -309,8 +309,6 @@ sed -i 's/\[General\]/\[General\]\nAccentColor=61,212,37/' /home/"$userName"/.co
 #
 # wallpaper
 # desktop wallpaper
-cp /home/"$userName"/personal/wallpapers/minimalriver.jpg /usr/share/wallpapers
-cp /home/"$userName"/personal/wallpapers/forest.jpg /usr/share/wallpapers
 su -c "touch /home/$userName/.config/plasmarc" "$userName"
 echo -e "[Wallpapers]\nusersWallpapers=/usr/share/wallpapers/minimalriver.jpg" > /home/"$userName"/.config/plasmarc
 # lock screen wallpaper
@@ -339,14 +337,9 @@ echo -e "only basic indexing=true" >> /home/"$userName"/.config/baloofilerc
 
 
 # save config files to desktop
-su -c "cp /home/$userName/personal/guake.config /home/$userName/Desktop" "$userName"
-su -c "cp /home/$userName/personal/qbittorrent.txt /home/$userName/Desktop" "$userName"
-su -c "cp /home/$userName/personal/plasma/system_monitor.page /home/$userName/Desktop" "$userName"
-
-
-# remove custom config files
-rm -rf /home/"$userName"/personal
-rm -rf /home/"$userName"/Desktop/packages.txt
+su -c "cp /home/$userName/archkde/dotfiles/guake.config /home/$userName/Desktop" "$userName"
+su -c "cp /home/$userName/archkde/dotfiles/qbittorrent.txt /home/$userName/Desktop" "$userName"
+su -c "cp /home/$userName/archkde/dotfiles/system_monitor.page /home/$userName/Desktop" "$userName"
 
 fi
 
