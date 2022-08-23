@@ -13,7 +13,7 @@ The installation includes printing capabilities, bluetooth, and automatic recomm
 
 ---
 
-# Instructions
+# Usage
 
 After booting into arch linux from a live medium in UEFI mode, run the install script with the following commands...
   1. `tmux`
